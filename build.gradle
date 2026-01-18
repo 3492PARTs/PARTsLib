@@ -94,6 +94,9 @@ spotless {
 
 """
 
+      // Exclude Elastic due to their custom license header. :D
+      targetExclude("src/org/parts3492/partslib/network/Elastic.java")
+
       googleJavaFormat('1.17.0').aosp()
 
       trimTrailingWhitespace()
