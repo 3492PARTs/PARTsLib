@@ -15,6 +15,9 @@ import org.parts3492.partslib.network.PARTsNT;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Command based subsystem with built-in PARTs tools and features.
+ */
 public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubsystem {
     protected PARTsNT partsNT;
     protected PARTsLogger partsLogger;
@@ -23,7 +26,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
     /**
      * Creates a new PARTsSubsystem.
      *
-     * <p>Comes with a PARTsNT generic instance.
+     * <p>Comes with instances of PARTs tools that use the "Generic" name.
      */
     public PARTsSubsystem() {
         partsNT = new PARTsNT(this.getName());
@@ -34,7 +37,20 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
     /**
      * Creates a new PARTsSubsystem.
      *
-     * <p>Comes with a PARTsNT instance based on the given class.
+     * <p>Comes with instances of PARTs tools that use the "Generic" name.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this subsystem.
+     */
+    public PARTsSubsystem(boolean enableLogging) {
+        partsNT = new PARTsNT(this.getName());
+        partsLogger = new PARTsLogger(this.getName(), enableLogging);
+        partsPrefrences = new PARTsPreferences();
+    }
+
+    /**
+     * Creates a new PARTsSubsystem.
+     *
+     * <p>Comes with instances of PARTs tools that use given class name.
+     * @param o The object that the subsystem will use for the name.
      */
     public PARTsSubsystem(Object o) {
         partsNT = new PARTsNT(o);
@@ -45,9 +61,36 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
     /**
      * Creates a new PARTsSubsystem.
      *
-     * <p>Comes with a PARTsNT instance based on the given class name.
+     * <p>Comes with instances of PARTs tools that use given class name.
+     * @param o The object that the subsystem will use for the name.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this subsystem.
+     */
+    public PARTsSubsystem(Object o, boolean enableLogging) {
+        partsNT = new PARTsNT(o);
+        partsLogger = new PARTsLogger(o, enableLogging);
+        partsPrefrences = new PARTsPreferences();
+    }
+
+    /**
+     * Creates a new PARTsSubsystem.
+     *
+     * <p>Comes with instances of PARTs tools that use given class name.
+     * @param className The name that this subsystem should use as it's name.
      */
     public PARTsSubsystem(String className) {
+        partsNT = new PARTsNT(className);
+        partsLogger = new PARTsLogger(className);
+        partsPrefrences = new PARTsPreferences();
+    }
+
+    /**
+     * Creates a new PARTsSubsystem.
+     *
+     * <p>Comes with instances of PARTs tools that use given class name.
+     * @param className The name that this subsystem should use as it's name.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this subsystem.
+     */
+    public PARTsSubsystem(String className, boolean enableLogging) {
         partsNT = new PARTsNT(className);
         partsLogger = new PARTsLogger(className);
         partsPrefrences = new PARTsPreferences();
