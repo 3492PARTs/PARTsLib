@@ -312,11 +312,7 @@ public class PARTsCommandController {
                 val = dualsenseController.R1(loop);
                 break;
             case OTHER:
-                val =
-                        new Trigger(
-                                () -> {
-                                    return false;
-                                });
+                break;
             case XBOX:
                 val = xboxController.rightBumper(loop);
                 break;
