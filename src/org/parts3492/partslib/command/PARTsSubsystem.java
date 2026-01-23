@@ -37,8 +37,8 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
      *
      * <p>Comes with instances of PARTs tools that use the "Generic" name.
      *
-     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this
-     *     subsystem.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger PARTsLogger}
+     *     instance for this subsystem.
      */
     public PARTsSubsystem(boolean enableLogging) {
         partsNT = new PARTsNT(this.getName());
@@ -65,8 +65,8 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
      * <p>Comes with instances of PARTs tools that use given class name.
      *
      * @param o The object that the subsystem will use for the name.
-     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this
-     *     subsystem.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger PARTsLogger}
+     *     instance for this subsystem.
      */
     public PARTsSubsystem(Object o, boolean enableLogging) {
         partsNT = new PARTsNT(o);
@@ -93,8 +93,8 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
      * <p>Comes with instances of PARTs tools that use given class name.
      *
      * @param className The name that this subsystem should use as it's name.
-     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger} instance for this
-     *     subsystem.
+     * @param enableLogging Enable the {@link org.parts3492.partslib.PARTsLogger PARTsLogger}
+     *     instance for this subsystem.
      */
     public PARTsSubsystem(String className, boolean enableLogging) {
         partsNT = new PARTsNT(className);

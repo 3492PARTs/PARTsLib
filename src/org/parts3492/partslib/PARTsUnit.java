@@ -10,7 +10,8 @@ import java.util.function.Function;
 public class PARTsUnit {
 
     public enum PARTsUnitType {
-        Angle, // Degrees. todo: change to degree?
+        /** Degrees. */
+        Angle, // TODO: change to degree?
         Radian,
         Meter,
         Inch,

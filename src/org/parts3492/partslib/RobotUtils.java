@@ -9,18 +9,34 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RuntimeType;
 
+/**
+ * Robot Utility Functions
+ *
+ * <p>Miscellaneous functions that are needed for PARTsLib.
+ */
 public class RobotUtils {
     private static Alliance alliance;
 
+    /**
+     * Check if the robot is on the blue alliance.
+     *
+     * @return True if the robot is on the blue alliance, else false.
+     */
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
     }
 
+    /**
+     * Check if the robot is real or in sim.
+     *
+     * @return True if real, else false.
+     */
     public static boolean isReal() {
         RuntimeType runtimeType = RobotBase.getRuntimeType();
         return runtimeType == RuntimeType.kRoboRIO || runtimeType == RuntimeType.kRoboRIO2;
     }
 
+    /** Get the alliance the robot is currently on. */
     public void getAlliance() {
         if (DriverStation.getAlliance().isPresent()) {
             alliance = DriverStation.getAlliance().get();

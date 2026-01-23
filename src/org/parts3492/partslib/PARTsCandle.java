@@ -142,7 +142,13 @@ public abstract class PARTsCandle extends PARTsSubsystem {
 
     private final int LED_LENGTH;
 
-    /** Creates a new light. */
+    /**
+     * Create a new PARTsCANdle.
+     *
+     * @param className The class name. E.g. PARTsCANdle
+     * @param canID The ID of the CANdle hardware.
+     * @param ledLength The length of LEDs attached to the CANdle.
+     */
     public PARTsCandle(String className, int canID, int ledLength) {
         super(className);
         CANBus canbus = new CANBus("rio");

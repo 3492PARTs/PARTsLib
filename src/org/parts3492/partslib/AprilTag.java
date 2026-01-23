@@ -6,7 +6,7 @@ package org.parts3492.partslib;
 
 import edu.wpi.first.math.geometry.Pose3d;
 
-/** This class stores information about a tag. */
+/** This class stores information about an AprilTag. */
 public class AprilTag {
 
     private final int id;

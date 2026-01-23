@@ -24,6 +24,15 @@ public class PARTsCommandController {
     private CommandJoystick joystick;
     private String err_msg = "";
 
+    /**
+     * Create a new PARTsCommandController
+     *
+     * @param port The controller port.
+     * @param disableAutomaticDetection This will default the controller to {@link
+     *     PARTsController.ControllerType#OTHER ControllerType.OTHER} if disabled. Refer to {@link
+     *     #PARTsCommandController(int, ControllerType) PARTsCommandController(port,
+     *     ControllerType)} for setting the desired controller type.
+     */
     public PARTsCommandController(int port, boolean disableAutomaticDetection) {
         if (!disableAutomaticDetection) {
             if (DriverStation.getJoystickIsXbox(port)) {
@@ -42,6 +51,12 @@ public class PARTsCommandController {
         initialize(port);
     }
 
+    /**
+     * Create a new PARTsCommandController
+     *
+     * @param port The controller port.
+     * @param controllerType The desired controller type.
+     */
     public PARTsCommandController(int port, ControllerType controllerType) {
         this.controllerType = controllerType;
         initialize(port);
