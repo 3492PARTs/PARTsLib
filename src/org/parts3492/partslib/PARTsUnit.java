@@ -18,7 +18,9 @@ public class PARTsUnit {
         Foot,
         Percent,
         Rotations,
-        MetersPerSecond
+        MetersPerSecond,
+        Pound,
+        Kilogram
     }
 
     private double value;
@@ -124,6 +126,20 @@ public class PARTsUnit {
             case Percent:
                 throw new RuntimeException(
                         message + " Percent cannot not be translated to any other type.");
+            case Pound:
+                switch (unitType) {
+                    case Kilogram:
+                        return this.value * 0.453592;
+                    default:
+                        throw new RuntimeException(message);
+                }
+            case Kilogram:
+                switch (unitType) {
+                    case Pound:
+                        return this.value * 2.2046226218;
+                    default:
+                        throw new RuntimeException(message);
+                }
             default:
                 throw new RuntimeException(message);
         }
