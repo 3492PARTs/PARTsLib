@@ -76,9 +76,14 @@ public class PARTsUnit {
         String message = "No to type for unit.";
         switch (this.unitType) {
             case Angle:
-                if (unitType == PARTsUnitType.Radian) return this.value * Math.PI / 180.0;
-                else if (unitType == this.unitType) return this.value;
-                throw new RuntimeException(message);
+                switch (unitType) {
+                    case Radian:
+                        return this.value * Math.PI / 180.0;
+                    case Angle:
+                        return this.value;
+                    default:
+                        throw new RuntimeException(message);
+                }
             case Radian:
                 if (unitType == PARTsUnitType.Angle) return this.value * 180.0 / Math.PI;
                 else if (unitType == this.unitType) return this.value;
