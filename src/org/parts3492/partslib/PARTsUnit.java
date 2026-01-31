@@ -136,7 +136,7 @@ public class PARTsUnit {
                         return this.value;
                     default:
                         throw new RuntimeException(
-                            message + " Percent cannot not be translated to any other type.");
+                                message + " Percent cannot not be translated to any other type.");
                 }
             case Pound:
                 switch (unitType) {
