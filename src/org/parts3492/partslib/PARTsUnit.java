@@ -120,16 +120,25 @@ public class PARTsUnit {
                 switch (unitType) {
                     case Angle:
                         return this.value * 360;
+                    case Rotations:
+                        return this.value;
                     default:
                         throw new RuntimeException(message);
                 }
             case Percent:
-                throw new RuntimeException(
-                        message + " Percent cannot not be translated to any other type.");
+                switch (unitType) {
+                    case Percent:
+                        return this.value;
+                    default:
+                        throw new RuntimeException(
+                            message + " Percent cannot not be translated to any other type.");
+                }
             case Pound:
                 switch (unitType) {
                     case Kilogram:
                         return this.value * 0.453592;
+                    case Pound:
+                        return this.value;
                     default:
                         throw new RuntimeException(message);
                 }
@@ -137,6 +146,8 @@ public class PARTsUnit {
                 switch (unitType) {
                     case Pound:
                         return this.value * 2.2046226218;
+                    case Kilogram:
+                        return this.value;
                     default:
                         throw new RuntimeException(message);
                 }
