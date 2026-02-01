@@ -4,14 +4,14 @@
 
 package org.parts3492.partslib;
 
+import org.parts3492.partslib.game.FieldBase;
+
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import org.parts3492.partslib.game.FieldBase;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 

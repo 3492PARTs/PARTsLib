@@ -4,6 +4,8 @@
 
 package org.parts3492.partslib.game;
 
+import org.parts3492.partslib.RobotUtils;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,24 +19,25 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.parts3492.partslib.RobotUtils;
-
-/** Base field class for generic info.<p>
- *  Extend this class in your project to add season specific field data.
+/**
+ * Base field class for generic info.
+ *
+ * <p>Extend this class in your project to add season specific field data.
  */
 public interface FieldBase {
 
     public static final Field2d FIELD2D = new Field2d();
 
-    /**The width of the field. */
+    /** The width of the field. */
     double WIDTH = Units.inchesToMeters(317.000);
 
-    /**The height of the field. */
+    /** The height of the field. */
     double LENGTH = Units.inchesToMeters(690.876);
 
-    //#region Conditional Transforms
+    // #region Conditional Transforms
     /**
      * Conditionally transform a pose to the opposite of the current alliance.
+     *
      * @param pose The pose to transform.
      * @return The transformed pose.
      */
@@ -44,6 +47,7 @@ public interface FieldBase {
 
     /**
      * Conditionally transform a pose to the opposite of the current alliance.
+     *
      * @param pose The pose to transform.
      * @return The transformed pose.
      */
@@ -53,6 +57,7 @@ public interface FieldBase {
 
     /**
      * Conditionally transform a translation to the opposite of the current alliance.
+     *
      * @param translation The translation to transform.
      * @return The transformed translation.
      */
@@ -63,17 +68,20 @@ public interface FieldBase {
 
     /**
      * Conditionally transform a list of poses to the opposite of the current alliance.
+     *
      * @param poses The poses to transform.
      * @return The transformed poses.
      */
     public static List<Pose2d> conditionallyTransformToOppositeAlliance(List<Pose2d> poses) {
         return RobotUtils.isBlue() ? poses : transformToOppositeAlliance(poses);
     }
-    //#endregion
 
-    //#region Transforms
+    // #endregion
+
+    // #region Transforms
     /**
      * Transform a pose to the opposite of the current alliance.
+     *
      * @param pose The pose to transform.
      * @return The transformed pose.
      */
@@ -87,6 +95,7 @@ public interface FieldBase {
 
     /**
      * Transform a pose to the opposite of the current alliance.
+     *
      * @param pose The pose to transform.
      * @return The transformed pose.
      */
@@ -99,6 +108,7 @@ public interface FieldBase {
 
     /**
      * Transform a translation to the opposite of the current alliance.
+     *
      * @param translation The translation to transform.
      * @return The transformed translation.
      */
@@ -108,6 +118,7 @@ public interface FieldBase {
 
     /**
      * Transform a list of poses to the opposite of the current alliance.
+     *
      * @param poses The poses to transform.
      * @return The transformed poses.
      */
@@ -118,7 +129,8 @@ public interface FieldBase {
         }
         return newPoses;
     }
-    //#endregion
+
+    // #endregion
 
     /*** APRILTAGS ***/
 
@@ -127,6 +139,7 @@ public interface FieldBase {
 
     /**
      * Check if an AprilTag is valid.
+     *
      * @param id The ID of the AprilTag.
      * @return True if the tag is valid.
      */
@@ -141,6 +154,7 @@ public interface FieldBase {
 
     /**
      * Get an {@link org.parts3492.partslib.game.AprilTag AprilTag} by its ID.
+     *
      * @param id The AprilTag ID.
      * @return The AprilTag with the matching ID if the ID is valid, otherwise null.
      */
@@ -155,6 +169,7 @@ public interface FieldBase {
 
     /**
      * Get all AprilTag IDs.
+     *
      * @return Array of AprilTag IDs.
      */
     public static int[] getAllTagIDs() {
