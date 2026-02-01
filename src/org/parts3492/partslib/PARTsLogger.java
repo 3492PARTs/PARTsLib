@@ -11,6 +11,8 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import org.parts3492.partslib.game.FieldBase;
+
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class PARTsLogger {
@@ -155,18 +157,18 @@ public class PARTsLogger {
         PathPlannerLogging.setLogTargetPoseCallback(
                 (pose) -> {
                     // Do whatever you want with the pose here
-                    Field.FIELD2D
+                    FieldBase.FIELD2D
                             .getObject("target pose")
-                            .setPose(Field.conditionallyTransformToOppositeAlliance(pose));
+                            .setPose(FieldBase.conditionallyTransformToOppositeAlliance(pose));
                 });
 
         // Logging callback for the active path, this is sent as a list of poses
         PathPlannerLogging.setLogActivePathCallback(
                 (poses) -> {
                     // Do whatever you want with the poses here
-                    Field.FIELD2D
+                    FieldBase.FIELD2D
                             .getObject("path")
-                            .setPoses(Field.conditionallyTransformToOppositeAlliance(poses));
+                            .setPoses(FieldBase.conditionallyTransformToOppositeAlliance(poses));
                 });
     }
 }
