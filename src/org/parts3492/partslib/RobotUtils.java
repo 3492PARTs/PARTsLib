@@ -6,8 +6,8 @@ package org.parts3492.partslib;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RuntimeType;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 /**
  * Robot Utility Functions
@@ -32,7 +32,7 @@ public class RobotUtils {
      * @return True if real, else false.
      */
     public static boolean isReal() {
-        RuntimeType runtimeType = RobotBase.getRuntimeType();
+        RuntimeType runtimeType = TimedRobot.getRuntimeType();
         return runtimeType == RuntimeType.kRoboRIO || runtimeType == RuntimeType.kRoboRIO2;
     }
 
