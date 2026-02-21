@@ -72,6 +72,15 @@ public class PARTsUnit {
      * @param unitType The target unit.
      * @return Converted unit in double.
      */
+    public PARTsUnit toPARTsUnit(PARTsUnitType unitType) {
+        return new PARTsUnit(to(unitType), unitType);
+    }
+    /**
+     * Converts current unit into the requested unit.
+     *
+     * @param unitType The target unit.
+     * @return Converted unit in double.
+     */
     public double to(PARTsUnitType unitType) {
         String message = "No to type for unit.";
         switch (this.unitType) {
