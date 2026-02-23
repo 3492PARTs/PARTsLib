@@ -183,7 +183,8 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     }
 
     protected Command setNoColorCommand() {
-        return PARTsCommandUtils.setCommandName("PARTsCandle.setNoColorCommand", runOnce(() -> setNoColor()));
+        return PARTsCommandUtils.setCommandName(
+                "PARTsCandle.setNoColorCommand", runOnce(() -> setNoColor()));
     }
 
     private FireAnimation getBurnyBurnAnimation() {
