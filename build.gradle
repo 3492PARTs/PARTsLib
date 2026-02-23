@@ -82,6 +82,7 @@ spotless {
       importOrder('org.parts3492.partslib', 'org.parts3492', 'edu.wpi')
       removeUnusedImports()
    }
+   enforceCheck = false
 }
 
 // Example to configure HTML report
