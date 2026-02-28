@@ -13,6 +13,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.controls.ColorFlowAnimation;
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.EmptyAnimation;
 import com.ctre.phoenix6.controls.FireAnimation;
 import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.RainbowAnimation;
@@ -156,9 +157,9 @@ public abstract class PARTsCandle extends PARTsSubsystem {
         LED_LENGTH = ledLength;
 
         config.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
-        config.LED.LossOfSignalBehavior = LossOfSignalBehaviorValue.DisableLEDs;
+        config.LED.LossOfSignalBehavior = LossOfSignalBehaviorValue.KeepRunning;
         config.LED.StripType = StripTypeValue.GRB;
-        config.LED.BrightnessScalar = 0.5;
+        config.LED.BrightnessScalar = 1;
         config.CANdleFeatures.VBatOutputMode =
                 VBatOutputModeValue.Modulated; // does this do anything?
 
@@ -169,8 +170,13 @@ public abstract class PARTsCandle extends PARTsSubsystem {
 
     /*---------------------------------- Custom Private Functions ---------------------------------*/
     protected void setColor(Color color) {
-        candle.setControl(
-                new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
+        setControl(new EmptyAnimation(0));
+        setControl(new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
+        //camera 21 - 14 inches forward
+        //camera 24 - 13 inches side
+        //camera 14 inches up
+        //camera 45 degrees side to side
+        //camera 40 degrees up and down
     }
 
     protected void setNoColor() {
