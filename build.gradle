@@ -20,14 +20,6 @@ java {
    targetCompatibility = JavaVersion.VERSION_17
 }
 
-sourceSets {
-   main {
-      java {
-         srcDir "src"
-      }
-   }
-}
-
 configurations {
    jaxDoclet
 }
@@ -43,7 +35,7 @@ dependencies {
    implementation wpi.java.deps.wpilib()
    implementation wpi.java.vendor.java()
 
-   testImplementation 'junit:junit:4.12'
+   testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 }
 
 publishing {
@@ -107,6 +99,10 @@ javadoc {
 
 build {
    dependsOn javadoc
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jar {
