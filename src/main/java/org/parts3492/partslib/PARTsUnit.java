@@ -183,7 +183,7 @@ public class PARTsUnit {
     }
 
     // * DIRECT STATIC CONVERSIONS */
-    public static Function<Double, Double> InchesToMeters = inches -> inches / 39.37;
-    public static Function<Double, Double> MetersToInches = meters -> meters * 39.37;
+    public static Function<Double, Double> InchesToMeters = inches -> inches / 39.3700787;
+    public static Function<Double, Double> MetersToInches = meters -> meters * 39.3700787;
     public static Function<Double, Double> DegreesToRadians = degrees -> degrees * (Math.PI / 180);
 }
