@@ -1,12 +1,14 @@
-package org.parts3492.partslib;
+/* Copyright (c) 2026 PARTs 3492. All rights reserved. */
+/* This work is licensed under the terms of the license */
+/* found in the root directory of this project. */
 
-import org.junit.jupiter.api.Test;
-import org.parts3492.partslib.PARTsUnit.PARTsUnitType;
+package org.parts3492.partslib;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import org.parts3492.partslib.PARTsUnit.PARTsUnitType;
+
+import org.junit.jupiter.api.Test;
 
 class PARTsUnitTest {
     @Test
