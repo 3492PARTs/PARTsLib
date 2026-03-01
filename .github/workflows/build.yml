@@ -43,6 +43,25 @@ jobs:
       uses: gradle/gradle-build-action@v2.3.0-beta.1
       with:
         arguments: javadoc
+  
+  unit-tests:
+    name: Unit Tests
+  
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        
+    - name: Spotless Check - Gradle ${{ env.GRADLE_VERSION }}
+      uses: gradle/gradle-build-action@v2.3.0-beta.1
+      with:
+        gradle-version: ${{ env.GRADLE_VERSION }} 
+        arguments: test
         
   final-build:
     name: Finalize
