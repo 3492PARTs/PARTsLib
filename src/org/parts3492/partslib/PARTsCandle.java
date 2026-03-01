@@ -171,12 +171,8 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     /*---------------------------------- Custom Private Functions ---------------------------------*/
     protected void setColor(Color color) {
         setControl(new EmptyAnimation(0));
-        setControl(new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
-        //camera 21 - 14 inches forward
-        //camera 24 - 13 inches side
-        //camera 14 inches up
-        //camera 45 degrees side to side
-        //camera 40 degrees up and down
+        setControl(
+                new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
     }
 
     protected void setNoColor() {

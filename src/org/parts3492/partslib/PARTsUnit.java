@@ -72,9 +72,6 @@ public class PARTsUnit {
      * @param unitType The target unit.
      * @return Converted unit in double.
      */
-    public PARTsUnit toPARTsUnit(PARTsUnitType unitType) {
-        return new PARTsUnit(to(unitType), unitType);
-    }
 
     /**
      * Converts current unit into the requested unit.
@@ -82,7 +79,7 @@ public class PARTsUnit {
      * @param unitType The target unit.
      * @return Converted unit in double.
      */
-    public double to(PARTsUnitType unitType) {
+    private double convertValue(PARTsUnitType unitType) {
         String message = "No to type for unit.";
         switch (this.unitType) {
             case Angle:
@@ -171,6 +168,10 @@ public class PARTsUnit {
         }
     }
 
+    public double getValueAsDouble() {
+        return this.value;
+    }
+
     /**
      * Converts current unit into the requested unit.
      *
@@ -178,8 +179,8 @@ public class PARTsUnit {
      *     PARTsUnitType}.
      * @return The converted {@link org.parts3492.partslib.PARTsUnit PARTsUnit}.
      */
-    public PARTsUnit as(PARTsUnitType unitType) {
-        return new PARTsUnit(to(unitType), unitType);
+    public PARTsUnit to(PARTsUnitType unitType) {
+        return new PARTsUnit(convertValue(unitType), unitType);
     }
 
     // * DIRECT STATIC CONVERSIONS */
