@@ -487,4 +487,9 @@ public class PARTsNT {
             topic = String.format("%s/%s", name, key);
         // SmartDashboard.putData(topic, data); // loop-overrun
     }
+
+    public void putSmartDashboardSendable(String key, Sendable data, boolean debug) {
+        if (debug)
+            putSmartDashboardSendable(key, data);
+    }
 }
