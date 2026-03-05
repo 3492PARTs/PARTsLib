@@ -482,6 +482,9 @@ public class PARTsNT {
      * @param data The sendable to add.
      */
     public void putSmartDashboardSendable(String key, Sendable data) {
-        //SmartDashboard.putData(String.format("%s/%s", name, key), data);
+        String topic = key;
+        if (!name.equals("Generic"))
+            topic = String.format("%s/%s", name, key);
+        // SmartDashboard.putData(topic, data); // loop-overrun
     }
 }

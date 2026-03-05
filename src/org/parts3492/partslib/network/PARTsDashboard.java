@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class PARTsDashboard {
     private static DashboardTab state = DashboardTab.AUTONOMOUS;
+    private final static PARTsNT partsNT = new PARTsNT();
 
     public enum DashboardTab {
         AUTONOMOUS("Autonomous"),
@@ -26,14 +27,15 @@ public class PARTsDashboard {
         }
     }
 
-    public PARTsDashboard() {}
+    public PARTsDashboard() {
+    }
 
     public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems) {
-        subsystems.forEach(s -> SmartDashboard.putData(s));
+        subsystems.forEach(s -> partsNT.putSmartDashboardSendable(s.getName().replace("Phys", "").replace("Sim", ""), s));
     }
 
     public static void setCommandScheduler() {
-        SmartDashboard.putData(CommandScheduler.getInstance());
+        partsNT.putSmartDashboardSendable("Command Scheduler", CommandScheduler.getInstance());
     }
 
     public static void setTab(DashboardTab dashboardState) {
