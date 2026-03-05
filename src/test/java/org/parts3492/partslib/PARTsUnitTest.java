@@ -14,6 +14,9 @@ class PARTsUnitTest {
 
     //#region From INCHES
     @Test
+    /**
+     * Test inchest to meter in PARTsUnit.
+     */
     public void testConvertInchesToMeters() {
         PARTsUnit unit = new PARTsUnit(39.37008, PARTsUnitType.Inch);
         assertEquals(1.0, Math.floor(unit.to(PARTsUnitType.Meter)), 1e-5);
