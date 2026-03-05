@@ -171,7 +171,8 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     /*---------------------------------- Custom Private Functions ---------------------------------*/
     protected void setColor(Color color) {
         setControl(new EmptyAnimation(0));
-        setControl(new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
+        setControl(
+                new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
     }
 
     protected void setNoColor() {

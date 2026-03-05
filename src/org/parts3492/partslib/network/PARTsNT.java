@@ -15,7 +15,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.networktables.StringTopic;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -483,13 +482,11 @@ public class PARTsNT {
      */
     public void putSmartDashboardSendable(String key, Sendable data) {
         String topic = key;
-        if (!name.equals("Generic"))
-            topic = String.format("%s/%s", name, key);
+        if (!name.equals("Generic")) topic = String.format("%s/%s", name, key);
         // SmartDashboard.putData(topic, data); // loop-overrun
     }
 
     public void putSmartDashboardSendable(String key, Sendable data, boolean debug) {
-        if (debug)
-            putSmartDashboardSendable(key, data);
+        if (debug) putSmartDashboardSendable(key, data);
     }
 }
