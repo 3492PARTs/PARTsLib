@@ -6,13 +6,13 @@ package org.parts3492.partslib.network;
 
 import org.parts3492.partslib.command.IPARTsSubsystem;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.util.ArrayList;
 
 public class PARTsDashboard {
     private static DashboardTab state = DashboardTab.AUTONOMOUS;
+    private static final PARTsNT partsNT = new PARTsNT();
 
     public enum DashboardTab {
         AUTONOMOUS("Autonomous"),
@@ -26,14 +26,17 @@ public class PARTsDashboard {
         }
     }
 
-    public PARTsDashboard() {}
-
-    public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems) {
-        subsystems.forEach(s -> SmartDashboard.putData(s));
+    public PARTsDashboard() {
     }
 
-    public static void setCommandScheduler() {
-        SmartDashboard.putData(CommandScheduler.getInstance());
+    public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems, boolean post) {
+        subsystems.forEach(
+                s -> partsNT.putSmartDashboardSendable(
+                        s.getName().replace("Phys", "").replace("Sim", ""), s, post));
+    }
+
+    public static void setCommandScheduler(boolean post) {
+        partsNT.putSmartDashboardSendable("Command Scheduler", CommandScheduler.getInstance(), post);
     }
 
     public static void setTab(DashboardTab dashboardState) {

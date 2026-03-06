@@ -171,7 +171,8 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     /*---------------------------------- Custom Private Functions ---------------------------------*/
     protected void setColor(Color color) {
         setControl(new EmptyAnimation(0));
-        setControl(new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
+        setControl(
+                new SolidColor(0, LED_LENGTH).withColor(new RGBWColor(color.r, color.g, color.b)));
     }
 
     protected void setNoColor() {
@@ -412,24 +413,17 @@ public abstract class PARTsCandle extends PARTsSubsystem {
 
     @Override
     public void outputTelemetry() {
-        super.partsNT.putString("Animation", candle.getAppliedControl().getName());
     }
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }
 
     @Override
     public void reset() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'reset'");
     }
 
     @Override
     public void log() {
-        // TODO Auto-generated method stub
-        super.partsLogger.logString("Animation", candle.getAppliedControl().getName());
     }
 }
