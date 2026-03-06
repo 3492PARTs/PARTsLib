@@ -26,17 +26,17 @@ public class PARTsDashboard {
         }
     }
 
-    public PARTsDashboard() {}
-
-    public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems) {
-        subsystems.forEach(
-                s ->
-                        partsNT.putSmartDashboardSendable(
-                                s.getName().replace("Phys", "").replace("Sim", ""), s));
+    public PARTsDashboard() {
     }
 
-    public static void setCommandScheduler() {
-        partsNT.putSmartDashboardSendable("Command Scheduler", CommandScheduler.getInstance());
+    public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems, boolean post) {
+        subsystems.forEach(
+                s -> partsNT.putSmartDashboardSendable(
+                        s.getName().replace("Phys", "").replace("Sim", ""), s, post));
+    }
+
+    public static void setCommandScheduler(boolean post) {
+        partsNT.putSmartDashboardSendable("Command Scheduler", CommandScheduler.getInstance(), post);
     }
 
     public static void setTab(DashboardTab dashboardState) {

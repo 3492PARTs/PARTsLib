@@ -413,7 +413,6 @@ public abstract class PARTsCandle extends PARTsSubsystem {
 
     @Override
     public void outputTelemetry() {
-        super.partsNT.putString("Animation", candle.getAppliedControl().getName());
     }
 
     @Override
