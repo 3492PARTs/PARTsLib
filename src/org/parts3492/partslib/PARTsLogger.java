@@ -4,6 +4,9 @@
 
 package org.parts3492.partslib;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.parts3492.partslib.game.FieldBase;
 
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -98,9 +101,13 @@ public class PARTsLogger {
         if (loggingEnabled) {            
 
             if (log == null){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+                String currentDateTime = LocalDateTime.now().format(formatter);
                 // Starts recording to data log
-                DataLogManager.start();
-                log = DataLogManager.getLog();}
+                DataLogManager.start("", "PARTsLog_" + currentDateTime);
+
+                log = DataLogManager.getLog();
+            }
         }
     }
 
