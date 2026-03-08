@@ -161,26 +161,4 @@ public class PARTsLogger {
                             });
         }
     }
-
-    public void logPathPlanner(boolean logEntry) {
-        if (logEntry) {
-            // Logging callback for target robot pose
-            PathPlannerLogging.setLogTargetPoseCallback(
-                    (pose) -> {
-                        // Do whatever you want with the pose here
-                        FieldBase.FIELD2D
-                                .getObject("target pose")
-                                .setPose(FieldBase.conditionallyTransformToOppositeAlliance(pose));
-                    });
-
-            // Logging callback for the active path, this is sent as a list of poses
-            PathPlannerLogging.setLogActivePathCallback(
-                    (poses) -> {
-                        // Do whatever you want with the poses here
-                        FieldBase.FIELD2D
-                                .getObject("path")
-                                .setPoses(FieldBase.conditionallyTransformToOppositeAlliance(poses));
-                    });
-        }
-    }
 }

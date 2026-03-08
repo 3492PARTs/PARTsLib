@@ -4,6 +4,7 @@
 
 package org.parts3492.partslib.network;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleEntry;
@@ -19,6 +20,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
+import org.parts3492.partslib.game.FieldBase;
+
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * PARTs NetworkTables Easy API.
@@ -520,5 +526,20 @@ public class PARTsNT {
             topic = String.format("%s/%s", name, key);
         if (post)
             SmartDashboard.putData(topic, data); // loop-overrun
+    }
+
+    /**
+     * Adds a sendable to smart dashboard network table entry.
+     *
+     * @param data The sendable to add.
+     */
+    public void logPathPlanner(Consumer<Pose2d> logTargetPose, Consumer<List<Pose2d>> logActivePath, boolean logEntry) {
+        if (logEntry) {
+            // Logging callback for target robot pose
+            PathPlannerLogging.setLogTargetPoseCallback(logTargetPose);
+
+            // Logging callback for the active path, this is sent as a list of poses
+            PathPlannerLogging.setLogActivePathCallback(logActivePath);
+        }
     }
 }
