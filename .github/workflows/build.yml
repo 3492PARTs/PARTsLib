@@ -48,7 +48,7 @@ jobs:
     name: Finalize
     
     needs: 
-    #- spotless-check
+    - spotless-check
     - javadocs-check
     
     runs-on: ubuntu-latest
