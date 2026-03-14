@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Test;
 
 class PARTsUnitTest {
 
-    //#region From INCHES
+    // #region From INCHES
     @Test
-    /**
-     * Test inchest to meter in PARTsUnit.
-     */
+    /** Test inchest to meter in PARTsUnit. */
     public void testConvertInchesToMeters() {
         PARTsUnit unit = new PARTsUnit(39.37008, PARTsUnitType.Inch);
         assertEquals(1.0, Math.floor(unit.to(PARTsUnitType.Meter)), 1e-5);
@@ -33,9 +31,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Inch);
         assertEquals(1.0, Math.floor(unit.to(PARTsUnitType.Inch)), 1e-5);
     }
-    //#endregion
 
-    //#region From METERS
+    // #endregion
+
+    // #region From METERS
     @Test
     public void testConvertMetersToInches() {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Meter);
@@ -53,9 +52,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1, PARTsUnitType.Meter);
         assertEquals(1.0, unit.to(PARTsUnitType.Meter), 1e-5);
     }
-    //#endregion
 
-    //#region From ANGLE
+    // #endregion
+
+    // #region From ANGLE
     @Test
     public void testConvertAngleToRadian() {
         PARTsUnit unit = new PARTsUnit(57.29578, PARTsUnitType.Angle);
@@ -67,9 +67,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Angle);
         assertEquals(1.0, unit.to(PARTsUnitType.Angle));
     }
-    //#endregion
 
-    //#region From RADIAN
+    // #endregion
+
+    // #region From RADIAN
     @Test
     public void testConvertRadianToAngle() {
         PARTsUnit unit = new PARTsUnit(0.01745329, PARTsUnitType.Radian);
@@ -81,9 +82,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Radian);
         assertEquals(1.0, unit.to(PARTsUnitType.Radian), 1e-5);
     }
-    //#endregion
 
-    //#region From ROTATIONS
+    // #endregion
+
+    // #region From ROTATIONS
     @Test
     public void testConvertRotationToAngle() {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Rotations);
@@ -95,9 +97,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Rotations);
         assertEquals(1.0, unit.to(PARTsUnitType.Rotations), 1e-5);
     }
-    //#endregion
 
-    //#region From FOOT
+    // #endregion
+
+    // #region From FOOT
     @Test
     public void testConvertFootToMeter() {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Foot);
@@ -115,17 +118,19 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Foot);
         assertEquals(1.0, unit.to(PARTsUnitType.Foot), 1e-5);
     }
-    //#region
 
-    //#region From PERCENT
+    // #region
+
+    // #region From PERCENT
     @Test
     public void testConvertPercentToPercent() {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Percent);
         assertEquals(1.0, unit.to(PARTsUnitType.Percent), 1e-5);
     }
-    //#region
 
-    //#region From POUND
+    // #region
+
+    // #region From POUND
     @Test
     public void testConvertPoundToKilogram() {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Pound);
@@ -137,9 +142,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Pound);
         assertEquals(1.0, unit.to(PARTsUnitType.Pound), 1e-5);
     }
-    //#region
 
-    //#region From KILOGRAM
+    // #region
+
+    // #region From KILOGRAM
     @Test
     public void testConvertKilogramToPound() {
         PARTsUnit unit = new PARTsUnit(1, PARTsUnitType.Kilogram);
@@ -151,9 +157,10 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(1.0, PARTsUnitType.Kilogram);
         assertEquals(1.0, unit.to(PARTsUnitType.Kilogram), 1e-5);
     }
-    //#endregion
 
-    //#region Static Conversions
+    // #endregion
+
+    // #region Static Conversions
     @Test
     public void testConvertStaticInchesToMeters() {
         assertEquals(0.0254, PARTsUnit.InchesToMeters.apply(1.0), 1e-5);
@@ -168,9 +175,20 @@ class PARTsUnitTest {
     public void testConvertStaticDegreesToRadians() {
         assertEquals(0.01745329, PARTsUnit.DegreesToRadians.apply(1.0), 1e-5);
     }
-    //#endregion
 
-    //#region Misc Tests
+    @Test
+    public void testConvertStaticFootToMeters() {
+        assertEquals(0.30480, PARTsUnit.FootToMeters.apply(1.0), 1e-5);
+    }
+
+    @Test
+    public void testConvertStaticMetersToFoot() {
+        assertEquals(3.28084, PARTsUnit.MetersToFoot.apply(1.0), 1e-5);
+    }
+
+    // #endregion
+
+    // #region Misc Tests
     @Test
     public void testGetMagnitude() {
         PARTsUnit unit = new PARTsUnit(-45, PARTsUnitType.Inch);
@@ -182,5 +200,5 @@ class PARTsUnitTest {
         PARTsUnit unit = new PARTsUnit(45, PARTsUnitType.Inch);
         assertEquals(45, unit.getValue(), 1e-5);
     }
-    //#endregion
+    // #endregion
 }

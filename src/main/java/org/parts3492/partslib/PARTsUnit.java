@@ -182,8 +182,43 @@ public class PARTsUnit {
         return new PARTsUnit(to(unitType), unitType);
     }
 
-    // * DIRECT STATIC CONVERSIONS */
+    /**
+     * Static conversion function for inches to meters.
+     *
+     * <p>This can be used for direct conversions without needing to create a {@link
+     * org.parts3492.partslib.PARTsUnit PARTsUnit} instance, which can be faster in some instances.
+     */
     public static Function<Double, Double> InchesToMeters = inches -> inches / 39.3700787;
+
+    /**
+     * Static conversion function for meters to inches.
+     *
+     * <p>This can be used for direct conversions without needing to create a {@link
+     * org.parts3492.partslib.PARTsUnit PARTsUnit} instance, which can be faster in some instances.
+     */
     public static Function<Double, Double> MetersToInches = meters -> meters * 39.3700787;
+
+    /**
+     * Static conversion function for feet to meters.
+     *
+     * <p>This can be used for direct conversions without needing to create a {@link
+     * org.parts3492.partslib.PARTsUnit PARTsUnit} instance, which can be faster in some instances.
+     */
+    public static Function<Double, Double> FootToMeters = feet -> feet / 3.2808399;
+
+    /**
+     * Static conversion function for meters to feet.
+     *
+     * <p>This can be used for direct conversions without needing to create a {@link
+     * org.parts3492.partslib.PARTsUnit PARTsUnit} instance, which can be faster in some instances.
+     */
+    public static Function<Double, Double> MetersToFoot = meters -> meters * 3.2808399;
+
+    /**
+     * Static conversion function for degrees to radians.
+     *
+     * <p>This can be used for direct conversions without needing to create a {@link
+     * org.parts3492.partslib.PARTsUnit PARTsUnit} instance, which can be faster in some instances.
+     */
     public static Function<Double, Double> DegreesToRadians = degrees -> degrees * (Math.PI / 180);
 }
