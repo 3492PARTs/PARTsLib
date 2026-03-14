@@ -99,7 +99,7 @@ javadoc {
 }
 
 build {
-   dependsOn javadoc
+   //dependsOn javadoc
 }
 
 test {

@@ -4,6 +4,7 @@
 
 package org.parts3492.partslib.network;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleEntry;
@@ -19,13 +20,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
+import org.parts3492.partslib.game.FieldBase;
+
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * PARTs NetworkTables Easy API.
  *
- * <p>{@code PARTsNT partsNT = new PARTsNT(this)}
+ * <p>
+ * {@code PARTsNT partsNT = new PARTsNT(this)}
  *
- * <p>This class is meant to be used as an instance for each class.
+ * <p>
+ * This class is meant to be used as an instance for each class.
  */
 public class PARTsNT {
     public String name = "Generic";
@@ -36,13 +44,15 @@ public class PARTsNT {
     /**
      * Generic topic entry that is not designed to be used by itself.
      *
-     * <p>Use the other chilld classes instead.
+     * <p>
+     * Use the other chilld classes instead.
      */
     private class EasyGenericEntry {
         /** The NetworkTables topic name. */
         public String topicName;
 
-        public EasyGenericEntry() {}
+        public EasyGenericEntry() {
+        }
     }
 
     class EasyBooleanEntry extends EasyGenericEntry {
@@ -55,7 +65,9 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
+         * <p>
+         * Its purpose here is to provide a way to get the previous cached result,
+         * saving some
          * time.
          */
         public boolean cachedValue;
@@ -85,7 +97,9 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
+         * <p>
+         * Its purpose here is to provide a way to get the previous cached result,
+         * saving some
          * time.
          */
         public int cachedValue;
@@ -115,7 +129,9 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
+         * <p>
+         * Its purpose here is to provide a way to get the previous cached result,
+         * saving some
          * time.
          */
         public double cachedValue;
@@ -145,7 +161,9 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
+         * <p>
+         * Its purpose here is to provide a way to get the previous cached result,
+         * saving some
          * time.
          */
         public String cachedValue;
@@ -175,7 +193,8 @@ public class PARTsNT {
     /**
      * Sets up the master list and the entry lists.
      *
-     * <p>Internal function.
+     * <p>
+     * Internal function.
      */
     private void setupEntryLists() {
         topicsList = new ArrayList<>();
@@ -194,9 +213,11 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>Creates/uses the subtable "Generic" instead of the class subtable.
+     * <p>
+     * Creates/uses the subtable "Generic" instead of the class subtable.
      *
-     * <p>The object variation should be used instead.
+     * <p>
+     * The object variation should be used instead.
      */
     public PARTsNT() {
         table = nt_Instance.getTable("PARTs").getSubTable("Generic");
@@ -206,7 +227,8 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>Creates/uses the class subtable.
+     * <p>
+     * Creates/uses the class subtable.
      *
      * @param o The class object. (E.g. passing in 'this'.)
      */
@@ -219,9 +241,11 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>Creates/uses the subtable of the class via its name.
+     * <p>
+     * Creates/uses the subtable of the class via its name.
      *
-     * <p>If the name is empty, then the "Generic" table will be used instead.
+     * <p>
+     * If the name is empty, then the "Generic" table will be used instead.
      *
      * @param className The name of the class.
      */
@@ -255,10 +279,12 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyGenericEntry getEntry(String name) {
-        for (EasyGenericEntry entry : topicsList) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyGenericEntry getEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyGenericEntry entry : topicsList) {
+                if (entry.topicName.equals(name))
+                    return entry;
+            }
         return null;
     }
 
@@ -270,10 +296,12 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyBooleanEntry getBooleanEntry(String name) {
-        for (EasyBooleanEntry entry : booleanEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyBooleanEntry getBooleanEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyBooleanEntry entry : booleanEntries) {
+                if (entry.topicName.equals(name))
+                    return entry;
+            }
         return null;
     }
 
@@ -283,10 +311,12 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyIntegerEntry getIntegerEntry(String name) {
-        for (EasyIntegerEntry entry : integerEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyIntegerEntry getIntegerEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyIntegerEntry entry : integerEntries) {
+                if (entry.topicName.equals(name))
+                    return entry;
+            }
         return null;
     }
 
@@ -296,10 +326,12 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyDoubleEntry getDoubleEntry(String name) {
-        for (EasyDoubleEntry entry : doubleEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyDoubleEntry getDoubleEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyDoubleEntry entry : doubleEntries) {
+                if (entry.topicName.equals(name))
+                    return entry;
+            }
         return null;
     }
 
@@ -309,10 +341,12 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyStringEntry getStringEntry(String name) {
-        for (EasyStringEntry entry : stringEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyStringEntry getStringEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyStringEntry entry : stringEntries) {
+                if (entry.topicName.equals(name))
+                    return entry;
+            }
         return null;
     }
 
@@ -324,24 +358,25 @@ public class PARTsNT {
      * @param name The topic name.
      * @return Returns the boolean value if entry is found, otherwise returns false.
      */
-    public boolean getBoolean(String name) {
-        EasyBooleanEntry entry = getBooleanEntry(name);
+    public boolean getBoolean(String name, boolean pull) {
+        EasyBooleanEntry entry = getBooleanEntry(name, pull);
         return (entry == null) ? false : (entry.cachedValue = entry.entry.get());
     }
 
     /**
      * Sets the boolean value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putBoolean(String name, boolean value) {
-        EasyBooleanEntry entry = getBooleanEntry(name);
-        if (entry == null) {
-            booleanEntries.add(new EasyBooleanEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putBoolean(String name, boolean value, boolean post) {
+        EasyBooleanEntry entry = getBooleanEntry(name, post);
+        if (post)
+            if (entry == null) {
+                booleanEntries.add(new EasyBooleanEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- INTEGER FUNCTIONS -------- *//
@@ -352,24 +387,25 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return Returns the value if entry is found, otherwise returns zero.
      */
-    public int getInteger(String name) {
-        EasyIntegerEntry entry = getIntegerEntry(name);
+    public int getInteger(String name, boolean pull) {
+        EasyIntegerEntry entry = getIntegerEntry(name, pull);
         return (entry == null) ? 0 : (entry.cachedValue = Math.toIntExact(entry.entry.get()));
     }
 
     /**
      * Sets the integer value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putInteger(String name, int value) {
-        EasyIntegerEntry entry = getIntegerEntry(name);
-        if (entry == null) {
-            integerEntries.add(new EasyIntegerEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putInteger(String name, int value, boolean post) {
+        EasyIntegerEntry entry = getIntegerEntry(name, post);
+        if (post)
+            if (entry == null) {
+                integerEntries.add(new EasyIntegerEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- DOUBLE FUNCTIONS -------- *//
@@ -380,44 +416,45 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return Returns the value if entry is found, otherwise returns zero.
      */
-    public double getDouble(String name) {
-        EasyDoubleEntry entry = getDoubleEntry(name);
+    public double getDouble(String name, boolean pull) {
+        EasyDoubleEntry entry = getDoubleEntry(name, pull);
         return (entry == null) ? 0 : (entry.cachedValue = entry.entry.get());
     }
 
     /**
      * Sets the double value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putDouble(String name, double value) {
-        EasyDoubleEntry entry = getDoubleEntry(name);
-        if (entry == null) {
-            doubleEntries.add(new EasyDoubleEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putDouble(String name, double value, boolean post) {
+        EasyDoubleEntry entry = getDoubleEntry(name, post);
+        if (post)
+            if (entry == null) {
+                doubleEntries.add(new EasyDoubleEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     /**
      * Sets the double value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putNumber(String name, double value) {
-        putDouble(name, value);
+    public void putNumber(String name, double value, boolean post) {
+        putDouble(name, value, post);
     }
 
     /**
      * Sets the integer value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putNumber(String name, int value) {
-        putInteger(name, value);
+    public void putNumber(String name, int value, boolean post) {
+        putInteger(name, value, post);
     }
 
     // * -------- STRING FUNCTIONS -------- *//
@@ -426,26 +463,28 @@ public class PARTsNT {
      * Gets the string value from the requested entry.
      *
      * @param name The name of the entry.
-     * @return Returns the value if entry is found, otherwise returns an empty string.
+     * @return Returns the value if entry is found, otherwise returns an empty
+     *         string.
      */
-    public String getString(String name) {
-        EasyStringEntry entry = getStringEntry(name);
+    public String getString(String name, boolean pull) {
+        EasyStringEntry entry = getStringEntry(name, pull);
         return (entry == null) ? "" : (entry.cachedValue = entry.entry.get());
     }
 
     /**
      * Sets the string value for the requested entry.
      *
-     * @param name The name of the entry.
+     * @param name  The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putString(String name, String value) {
-        EasyStringEntry entry = getStringEntry(name);
-        if (entry == null) {
-            stringEntries.add(new EasyStringEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putString(String name, String value, boolean post) {
+        EasyStringEntry entry = getStringEntry(name, post);
+        if (post)
+            if (entry == null) {
+                stringEntries.add(new EasyStringEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- REMOVAL FUNCTIONS -------- *//
@@ -481,7 +520,26 @@ public class PARTsNT {
      *
      * @param data The sendable to add.
      */
-    public void putSmartDashboardSendable(String key, Sendable data) {
-        SmartDashboard.putData(String.format("%s/%s", name, key), data);
+    public void putSmartDashboardSendable(String key, Sendable data, boolean post) {
+        String topic = key;
+        if (!name.equals("Generic"))
+            topic = String.format("%s/%s", name, key);
+        if (post)
+            SmartDashboard.putData(topic, data); // loop-overrun
+    }
+
+    /**
+     * Adds a sendable to smart dashboard network table entry.
+     *
+     * @param data The sendable to add.
+     */
+    public void logPathPlanner(Consumer<Pose2d> logTargetPose, Consumer<List<Pose2d>> logActivePath, boolean logEntry) {
+        if (logEntry) {
+            // Logging callback for target robot pose
+            PathPlannerLogging.setLogTargetPoseCallback(logTargetPose);
+
+            // Logging callback for the active path, this is sent as a list of poses
+            PathPlannerLogging.setLogActivePathCallback(logActivePath);
+        }
     }
 }
