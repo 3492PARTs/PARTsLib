@@ -91,6 +91,8 @@ public class PARTsUnit {
                         return this.value * Math.PI / 180.0;
                     case Angle:
                         return this.value;
+                    case Rotations:
+                        return this.value / 360.0;
                     default:
                         throw new RuntimeException(message);
                 }
