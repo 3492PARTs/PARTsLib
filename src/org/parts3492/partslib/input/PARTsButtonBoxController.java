@@ -95,27 +95,27 @@ public class PARTsButtonBoxController {
         return new Trigger(() -> joystick.getRawButton(20));
     }
 
-    public Trigger absrightTrigger() {
+    public Trigger absCounterClockwiseTrigger() {
         return new Trigger(() -> joystick.getRawButton(21));
     }
 
-    public Trigger absleftTrigger() {
+    public Trigger absClockwiseTrigger() {
         return new Trigger(() -> joystick.getRawButton(22));
     }
 
-    public Trigger tcrightTrigger() {
+    public Trigger tcCounterClockwiseTrigger() {
         return new Trigger(() -> joystick.getRawButton(23));
     }
 
-    public Trigger tcleftTrigger() {
+    public Trigger tcClockwiseTrigger() {
         return new Trigger(() -> joystick.getRawButton(24));
     }
 
-    public Trigger absclickTrigger() {
+    public Trigger absClickTrigger() {
         return new Trigger(() -> joystick.getRawButton(25));
     }
 
-    public Trigger tcclickTrigger() {
+    public Trigger tcClickTrigger() {
         return new Trigger(() -> joystick.getRawButton(26));
     }
 
