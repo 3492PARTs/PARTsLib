@@ -86,19 +86,19 @@ public class PARTsPreferences {
             Preferences.setBoolean(key, value);
         }
 
-        public void setBoolean(Integer value) {
+        public void setInteger(Integer value) {
             Preferences.setInt(key, value);
         }
 
-        public void setBoolean(Double value) {
+        public void setDouble(Double value) {
             Preferences.setDouble(key, value);
         }
 
-        public void setBoolean(Float value) {
+        public void setFloat(Float value) {
             Preferences.setFloat(key, value);
         }
 
-        public void setBoolean(String value) {
+        public void setString(String value) {
             Preferences.setString(key, value);
         }
     }
