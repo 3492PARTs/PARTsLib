@@ -19,6 +19,7 @@ public class PARTsUnit {
         Percent,
         Rotations,
         MetersPerSecond,
+        RadiansPerSecond,
         Pound,
         Kilogram
     }
