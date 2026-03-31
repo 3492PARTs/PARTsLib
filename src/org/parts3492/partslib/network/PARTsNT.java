@@ -500,9 +500,12 @@ public class PARTsNT {
     }
 
     /**
-     * Adds a sendable to smart dashboard network table entry.
+     * Sets up the PathPlanner logging callbacks.
      *
-     * @param data The sendable to add.
+     * @param logTargetPose A Consumer that accepts a Pose2d for logging the target robot pose.
+     * @param logActivePath A Consumer that accepts a List of Pose2d for logging the active path.
+     * @param logEntry If true, the logging callbacks will be set up; if false, they will not be set
+     *     up.
      */
     public void logPathPlanner(
             Consumer<Pose2d> logTargetPose,
