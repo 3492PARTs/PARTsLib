@@ -18,22 +18,17 @@ import edu.wpi.first.networktables.StringTopic;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.pathplanner.lib.util.PathPlannerLogging;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.parts3492.partslib.game.FieldBase;
-
-import com.pathplanner.lib.util.PathPlannerLogging;
-
 /**
  * PARTs NetworkTables Easy API.
  *
- * <p>
- * {@code PARTsNT partsNT = new PARTsNT(this)}
+ * <p>{@code PARTsNT partsNT = new PARTsNT(this)}
  *
- * <p>
- * This class is meant to be used as an instance for each class.
+ * <p>This class is meant to be used as an instance for each class.
  */
 public class PARTsNT {
     public String name = "Generic";
@@ -44,15 +39,13 @@ public class PARTsNT {
     /**
      * Generic topic entry that is not designed to be used by itself.
      *
-     * <p>
-     * Use the other chilld classes instead.
+     * <p>Use the other chilld classes instead.
      */
     private class EasyGenericEntry {
         /** The NetworkTables topic name. */
         public String topicName;
 
-        public EasyGenericEntry() {
-        }
+        public EasyGenericEntry() {}
     }
 
     class EasyBooleanEntry extends EasyGenericEntry {
@@ -65,9 +58,7 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>
-         * Its purpose here is to provide a way to get the previous cached result,
-         * saving some
+         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
          * time.
          */
         public boolean cachedValue;
@@ -97,9 +88,7 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>
-         * Its purpose here is to provide a way to get the previous cached result,
-         * saving some
+         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
          * time.
          */
         public int cachedValue;
@@ -129,9 +118,7 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>
-         * Its purpose here is to provide a way to get the previous cached result,
-         * saving some
+         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
          * time.
          */
         public double cachedValue;
@@ -161,9 +148,7 @@ public class PARTsNT {
         /**
          * The value last gotten from set or get.
          *
-         * <p>
-         * Its purpose here is to provide a way to get the previous cached result,
-         * saving some
+         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
          * time.
          */
         public String cachedValue;
@@ -193,8 +178,7 @@ public class PARTsNT {
     /**
      * Sets up the master list and the entry lists.
      *
-     * <p>
-     * Internal function.
+     * <p>Internal function.
      */
     private void setupEntryLists() {
         topicsList = new ArrayList<>();
@@ -213,11 +197,9 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>
-     * Creates/uses the subtable "Generic" instead of the class subtable.
+     * <p>Creates/uses the subtable "Generic" instead of the class subtable.
      *
-     * <p>
-     * The object variation should be used instead.
+     * <p>The object variation should be used instead.
      */
     public PARTsNT() {
         table = nt_Instance.getTable("PARTs").getSubTable("Generic");
@@ -227,8 +209,7 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>
-     * Creates/uses the class subtable.
+     * <p>Creates/uses the class subtable.
      *
      * @param o The class object. (E.g. passing in 'this'.)
      */
@@ -241,11 +222,9 @@ public class PARTsNT {
     /**
      * Creates a new PARTsNT instance.
      *
-     * <p>
-     * Creates/uses the subtable of the class via its name.
+     * <p>Creates/uses the subtable of the class via its name.
      *
-     * <p>
-     * If the name is empty, then the "Generic" table will be used instead.
+     * <p>If the name is empty, then the "Generic" table will be used instead.
      *
      * @param className The name of the class.
      */
@@ -282,8 +261,7 @@ public class PARTsNT {
     private EasyGenericEntry getEntry(String name, boolean pull) {
         if (pull)
             for (EasyGenericEntry entry : topicsList) {
-                if (entry.topicName.equals(name))
-                    return entry;
+                if (entry.topicName.equals(name)) return entry;
             }
         return null;
     }
@@ -299,8 +277,7 @@ public class PARTsNT {
     private EasyBooleanEntry getBooleanEntry(String name, boolean pull) {
         if (pull)
             for (EasyBooleanEntry entry : booleanEntries) {
-                if (entry.topicName.equals(name))
-                    return entry;
+                if (entry.topicName.equals(name)) return entry;
             }
         return null;
     }
@@ -314,8 +291,7 @@ public class PARTsNT {
     private EasyIntegerEntry getIntegerEntry(String name, boolean pull) {
         if (pull)
             for (EasyIntegerEntry entry : integerEntries) {
-                if (entry.topicName.equals(name))
-                    return entry;
+                if (entry.topicName.equals(name)) return entry;
             }
         return null;
     }
@@ -329,8 +305,7 @@ public class PARTsNT {
     private EasyDoubleEntry getDoubleEntry(String name, boolean pull) {
         if (pull)
             for (EasyDoubleEntry entry : doubleEntries) {
-                if (entry.topicName.equals(name))
-                    return entry;
+                if (entry.topicName.equals(name)) return entry;
             }
         return null;
     }
@@ -344,8 +319,7 @@ public class PARTsNT {
     private EasyStringEntry getStringEntry(String name, boolean pull) {
         if (pull)
             for (EasyStringEntry entry : stringEntries) {
-                if (entry.topicName.equals(name))
-                    return entry;
+                if (entry.topicName.equals(name)) return entry;
             }
         return null;
     }
@@ -366,7 +340,7 @@ public class PARTsNT {
     /**
      * Sets the boolean value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putBoolean(String name, boolean value, boolean post) {
@@ -395,7 +369,7 @@ public class PARTsNT {
     /**
      * Sets the integer value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putInteger(String name, int value, boolean post) {
@@ -424,7 +398,7 @@ public class PARTsNT {
     /**
      * Sets the double value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putDouble(String name, double value, boolean post) {
@@ -440,7 +414,7 @@ public class PARTsNT {
     /**
      * Sets the double value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putNumber(String name, double value, boolean post) {
@@ -450,7 +424,7 @@ public class PARTsNT {
     /**
      * Sets the integer value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putNumber(String name, int value, boolean post) {
@@ -463,8 +437,7 @@ public class PARTsNT {
      * Gets the string value from the requested entry.
      *
      * @param name The name of the entry.
-     * @return Returns the value if entry is found, otherwise returns an empty
-     *         string.
+     * @return Returns the value if entry is found, otherwise returns an empty string.
      */
     public String getString(String name, boolean pull) {
         EasyStringEntry entry = getStringEntry(name, pull);
@@ -474,7 +447,7 @@ public class PARTsNT {
     /**
      * Sets the string value for the requested entry.
      *
-     * @param name  The name of the entry.
+     * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
     public void putString(String name, String value, boolean post) {
@@ -522,10 +495,8 @@ public class PARTsNT {
      */
     public void putSmartDashboardSendable(String key, Sendable data, boolean post) {
         String topic = key;
-        if (!name.equals("Generic"))
-            topic = String.format("%s/%s", name, key);
-        if (post)
-            SmartDashboard.putData(topic, data); // loop-overrun
+        if (!name.equals("Generic")) topic = String.format("%s/%s", name, key);
+        if (post) SmartDashboard.putData(topic, data); // loop-overrun
     }
 
     /**
@@ -533,7 +504,10 @@ public class PARTsNT {
      *
      * @param data The sendable to add.
      */
-    public void logPathPlanner(Consumer<Pose2d> logTargetPose, Consumer<List<Pose2d>> logActivePath, boolean logEntry) {
+    public void logPathPlanner(
+            Consumer<Pose2d> logTargetPose,
+            Consumer<List<Pose2d>> logActivePath,
+            boolean logEntry) {
         if (logEntry) {
             // Logging callback for target robot pose
             PathPlannerLogging.setLogTargetPoseCallback(logTargetPose);

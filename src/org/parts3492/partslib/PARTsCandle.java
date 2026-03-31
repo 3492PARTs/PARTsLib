@@ -412,18 +412,14 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     }
 
     @Override
-    public void outputTelemetry() {
-    }
+    public void outputTelemetry() {}
 
     @Override
-    public void stop() {
-    }
+    public void stop() {}
 
     @Override
-    public void reset() {
-    }
+    public void reset() {}
 
     @Override
-    public void log() {
-    }
+    public void log() {}
 }
