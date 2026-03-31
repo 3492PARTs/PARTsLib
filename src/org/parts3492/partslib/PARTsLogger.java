@@ -4,16 +4,12 @@
 
 package org.parts3492.partslib;
 
-import org.parts3492.partslib.game.FieldBase;
-
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class PARTsLogger {
     private static DataLog log;
@@ -23,8 +19,7 @@ public class PARTsLogger {
     /**
      * Create a new PARTsLogger.
      *
-     * <p>
-     * By default, logging is disabled.
+     * <p>By default, logging is disabled.
      */
     public PARTsLogger() {
         instantiate(false);
@@ -44,8 +39,7 @@ public class PARTsLogger {
     /**
      * Create a new PARTsLogger with the following name.
      *
-     * <p>
-     * By default, logging is disabled.
+     * <p>By default, logging is disabled.
      */
     public PARTsLogger(String name) {
         instantiate(false);
@@ -67,11 +61,9 @@ public class PARTsLogger {
     /**
      * Create a new PARTsLogger with the object's class name.
      *
-     * <p>
-     * E.g. <code>PARTsLogger</code>.
+     * <p>E.g. <code>PARTsLogger</code>.
      *
-     * <p>
-     * By default, logging is disabled.
+     * <p>By default, logging is disabled.
      */
     public PARTsLogger(Object o) {
         name = o.getClass().getSimpleName();
@@ -81,8 +73,7 @@ public class PARTsLogger {
     /**
      * Create a new PARTsLogger with the object's class name.
      *
-     * <p>
-     * E.g. <code>PARTsLogger</code>.
+     * <p>E.g. <code>PARTsLogger</code>.
      *
      * <p>
      *
@@ -95,12 +86,13 @@ public class PARTsLogger {
 
     private void instantiate(boolean allowLogging) {
         loggingEnabled = allowLogging;
-        if (loggingEnabled) {            
+        if (loggingEnabled) {
 
-            if (log == null){
+            if (log == null) {
                 // Starts recording to data log
                 DataLogManager.start();
-                log = DataLogManager.getLog();}
+                log = DataLogManager.getLog();
+            }
         }
     }
 
@@ -119,8 +111,7 @@ public class PARTsLogger {
             new BooleanLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(b);
             return true;
-        } else
-            return false;
+        } else return false;
     }
 
     public boolean logDouble(String key, double d, boolean logEntry) {
@@ -128,8 +119,7 @@ public class PARTsLogger {
             new DoubleLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(d);
             return true;
-        } else
-            return false;
+        } else return false;
     }
 
     public boolean logString(String key, String s, boolean logEntry) {
@@ -137,8 +127,7 @@ public class PARTsLogger {
             new StringLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(s);
             return true;
-        } else
-            return false;
+        } else return false;
     }
 
     public void logCommandScheduler(boolean logEntry) {
