@@ -412,25 +412,14 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     }
 
     @Override
-    public void outputTelemetry() {
-        super.partsNT.putString("Animation", candle.getAppliedControl().getName());
-    }
+    public void outputTelemetry() {}
 
     @Override
-    public void stop() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'stop'");
-    }
+    public void stop() {}
 
     @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'reset'");
-    }
+    public void reset() {}
 
     @Override
-    public void log() {
-        // TODO Auto-generated method stub
-        super.partsLogger.logString("Animation", candle.getAppliedControl().getName());
-    }
+    public void log() {}
 }

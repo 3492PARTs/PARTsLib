@@ -4,16 +4,12 @@
 
 package org.parts3492.partslib;
 
-import org.parts3492.partslib.game.FieldBase;
-
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class PARTsLogger {
     private static DataLog log;
@@ -91,10 +87,12 @@ public class PARTsLogger {
     private void instantiate(boolean allowLogging) {
         loggingEnabled = allowLogging;
         if (loggingEnabled) {
-            // Starts recording to data log
-            DataLogManager.start();
 
-            if (log == null) log = DataLogManager.getLog();
+            if (log == null) {
+                // Starts recording to data log
+                DataLogManager.start();
+                log = DataLogManager.getLog();
+            }
         }
     }
 
@@ -108,67 +106,48 @@ public class PARTsLogger {
         instantiate(false);
     }
 
-    public boolean logBoolean(String key, boolean b) {
-        if (loggingEnabled) {
+    public boolean logBoolean(String key, boolean b, boolean logEntry) {
+        if (loggingEnabled && logEntry) {
             new BooleanLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(b);
             return true;
         } else return false;
     }
 
-    public boolean logDouble(String key, double d) {
-        if (loggingEnabled) {
+    public boolean logDouble(String key, double d, boolean logEntry) {
+        if (loggingEnabled && logEntry) {
             new DoubleLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(d);
             return true;
         } else return false;
     }
 
-    public boolean logString(String key, String s) {
-        if (loggingEnabled) {
+    public boolean logString(String key, String s, boolean logEntry) {
+        if (loggingEnabled && logEntry) {
             new StringLogEntry(log, name.length() > 0 ? String.format("%s/%s", name, key) : key)
                     .append(s);
             return true;
         } else return false;
     }
 
-    public void logCommandScheduler() {
-
-        // Set the scheduler to log events for command initialize, interrupt, finish
-        CommandScheduler.getInstance()
-                .onCommandInitialize(
-                        command -> {
-                            logString(command.getName(), "Command initialized");
-                        });
-        CommandScheduler.getInstance()
-                .onCommandInterrupt(
-                        command -> {
-                            logString(command.getName(), "Command interrupted");
-                        });
-        CommandScheduler.getInstance()
-                .onCommandFinish(
-                        command -> {
-                            logString(command.getName(), "Command finished");
-                        });
-    }
-
-    public void logPathPlanner() {
-        // Logging callback for target robot pose
-        PathPlannerLogging.setLogTargetPoseCallback(
-                (pose) -> {
-                    // Do whatever you want with the pose here
-                    FieldBase.FIELD2D
-                            .getObject("target pose")
-                            .setPose(FieldBase.conditionallyTransformToOppositeAlliance(pose));
-                });
-
-        // Logging callback for the active path, this is sent as a list of poses
-        PathPlannerLogging.setLogActivePathCallback(
-                (poses) -> {
-                    // Do whatever you want with the poses here
-                    FieldBase.FIELD2D
-                            .getObject("path")
-                            .setPoses(FieldBase.conditionallyTransformToOppositeAlliance(poses));
-                });
+    public void logCommandScheduler(boolean logEntry) {
+        if (logEntry) {
+            // Set the scheduler to log events for command initialize, interrupt, finish
+            CommandScheduler.getInstance()
+                    .onCommandInitialize(
+                            command -> {
+                                logString(command.getName(), "Command initialized", true);
+                            });
+            CommandScheduler.getInstance()
+                    .onCommandInterrupt(
+                            command -> {
+                                logString(command.getName(), "Command interrupted", true);
+                            });
+            CommandScheduler.getInstance()
+                    .onCommandFinish(
+                            command -> {
+                                logString(command.getName(), "Command finished", true);
+                            });
+        }
     }
 }

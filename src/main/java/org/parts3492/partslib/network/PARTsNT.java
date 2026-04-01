@@ -4,6 +4,7 @@
 
 package org.parts3492.partslib.network;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleEntry;
@@ -17,8 +18,10 @@ import edu.wpi.first.networktables.StringTopic;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.pathplanner.lib.util.PathPlannerLogging;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * PARTs NetworkTables Easy API.
@@ -255,10 +258,11 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyGenericEntry getEntry(String name) {
-        for (EasyGenericEntry entry : topicsList) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyGenericEntry getEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyGenericEntry entry : topicsList) {
+                if (entry.topicName.equals(name)) return entry;
+            }
         return null;
     }
 
@@ -270,10 +274,11 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyBooleanEntry getBooleanEntry(String name) {
-        for (EasyBooleanEntry entry : booleanEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyBooleanEntry getBooleanEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyBooleanEntry entry : booleanEntries) {
+                if (entry.topicName.equals(name)) return entry;
+            }
         return null;
     }
 
@@ -283,10 +288,11 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyIntegerEntry getIntegerEntry(String name) {
-        for (EasyIntegerEntry entry : integerEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyIntegerEntry getIntegerEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyIntegerEntry entry : integerEntries) {
+                if (entry.topicName.equals(name)) return entry;
+            }
         return null;
     }
 
@@ -296,10 +302,11 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyDoubleEntry getDoubleEntry(String name) {
-        for (EasyDoubleEntry entry : doubleEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyDoubleEntry getDoubleEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyDoubleEntry entry : doubleEntries) {
+                if (entry.topicName.equals(name)) return entry;
+            }
         return null;
     }
 
@@ -309,10 +316,11 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return The entry if it exists, otherwise null.
      */
-    private EasyStringEntry getStringEntry(String name) {
-        for (EasyStringEntry entry : stringEntries) {
-            if (entry.topicName.equals(name)) return entry;
-        }
+    private EasyStringEntry getStringEntry(String name, boolean pull) {
+        if (pull)
+            for (EasyStringEntry entry : stringEntries) {
+                if (entry.topicName.equals(name)) return entry;
+            }
         return null;
     }
 
@@ -324,8 +332,8 @@ public class PARTsNT {
      * @param name The topic name.
      * @return Returns the boolean value if entry is found, otherwise returns false.
      */
-    public boolean getBoolean(String name) {
-        EasyBooleanEntry entry = getBooleanEntry(name);
+    public boolean getBoolean(String name, boolean pull) {
+        EasyBooleanEntry entry = getBooleanEntry(name, pull);
         return (entry == null) ? false : (entry.cachedValue = entry.entry.get());
     }
 
@@ -335,13 +343,14 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putBoolean(String name, boolean value) {
-        EasyBooleanEntry entry = getBooleanEntry(name);
-        if (entry == null) {
-            booleanEntries.add(new EasyBooleanEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putBoolean(String name, boolean value, boolean post) {
+        EasyBooleanEntry entry = getBooleanEntry(name, post);
+        if (post)
+            if (entry == null) {
+                booleanEntries.add(new EasyBooleanEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- INTEGER FUNCTIONS -------- *//
@@ -352,8 +361,8 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return Returns the value if entry is found, otherwise returns zero.
      */
-    public int getInteger(String name) {
-        EasyIntegerEntry entry = getIntegerEntry(name);
+    public int getInteger(String name, boolean pull) {
+        EasyIntegerEntry entry = getIntegerEntry(name, pull);
         return (entry == null) ? 0 : (entry.cachedValue = Math.toIntExact(entry.entry.get()));
     }
 
@@ -363,13 +372,14 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putInteger(String name, int value) {
-        EasyIntegerEntry entry = getIntegerEntry(name);
-        if (entry == null) {
-            integerEntries.add(new EasyIntegerEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putInteger(String name, int value, boolean post) {
+        EasyIntegerEntry entry = getIntegerEntry(name, post);
+        if (post)
+            if (entry == null) {
+                integerEntries.add(new EasyIntegerEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- DOUBLE FUNCTIONS -------- *//
@@ -380,8 +390,8 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return Returns the value if entry is found, otherwise returns zero.
      */
-    public double getDouble(String name) {
-        EasyDoubleEntry entry = getDoubleEntry(name);
+    public double getDouble(String name, boolean pull) {
+        EasyDoubleEntry entry = getDoubleEntry(name, pull);
         return (entry == null) ? 0 : (entry.cachedValue = entry.entry.get());
     }
 
@@ -391,13 +401,14 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putDouble(String name, double value) {
-        EasyDoubleEntry entry = getDoubleEntry(name);
-        if (entry == null) {
-            doubleEntries.add(new EasyDoubleEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putDouble(String name, double value, boolean post) {
+        EasyDoubleEntry entry = getDoubleEntry(name, post);
+        if (post)
+            if (entry == null) {
+                doubleEntries.add(new EasyDoubleEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     /**
@@ -406,8 +417,8 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putNumber(String name, double value) {
-        putDouble(name, value);
+    public void putNumber(String name, double value, boolean post) {
+        putDouble(name, value, post);
     }
 
     /**
@@ -416,8 +427,8 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putNumber(String name, int value) {
-        putInteger(name, value);
+    public void putNumber(String name, int value, boolean post) {
+        putInteger(name, value, post);
     }
 
     // * -------- STRING FUNCTIONS -------- *//
@@ -428,8 +439,8 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @return Returns the value if entry is found, otherwise returns an empty string.
      */
-    public String getString(String name) {
-        EasyStringEntry entry = getStringEntry(name);
+    public String getString(String name, boolean pull) {
+        EasyStringEntry entry = getStringEntry(name, pull);
         return (entry == null) ? "" : (entry.cachedValue = entry.entry.get());
     }
 
@@ -439,13 +450,14 @@ public class PARTsNT {
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putString(String name, String value) {
-        EasyStringEntry entry = getStringEntry(name);
-        if (entry == null) {
-            stringEntries.add(new EasyStringEntry(name, value));
-        } else if (entry.cachedValue != value) {
-            entry.entry.set((entry.cachedValue = value));
-        }
+    public void putString(String name, String value, boolean post) {
+        EasyStringEntry entry = getStringEntry(name, post);
+        if (post)
+            if (entry == null) {
+                stringEntries.add(new EasyStringEntry(name, value));
+            } else if (entry.cachedValue != value) {
+                entry.entry.set((entry.cachedValue = value));
+            }
     }
 
     // * -------- REMOVAL FUNCTIONS -------- *//
@@ -481,7 +493,30 @@ public class PARTsNT {
      *
      * @param data The sendable to add.
      */
-    public void putSmartDashboardSendable(String key, Sendable data) {
-        SmartDashboard.putData(String.format("%s/%s", name, key), data);
+    public void putSmartDashboardSendable(String key, Sendable data, boolean post) {
+        String topic = key;
+        if (!name.equals("Generic")) topic = String.format("%s/%s", name, key);
+        if (post) SmartDashboard.putData(topic, data); // loop-overrun
+    }
+
+    /**
+     * Sets up the PathPlanner logging callbacks.
+     *
+     * @param logTargetPose A Consumer that accepts a Pose2d for logging the target robot pose.
+     * @param logActivePath A Consumer that accepts a List of Pose2d for logging the active path.
+     * @param logEntry If true, the logging callbacks will be set up; if false, they will not be set
+     *     up.
+     */
+    public void logPathPlanner(
+            Consumer<Pose2d> logTargetPose,
+            Consumer<List<Pose2d>> logActivePath,
+            boolean logEntry) {
+        if (logEntry) {
+            // Logging callback for target robot pose
+            PathPlannerLogging.setLogTargetPoseCallback(logTargetPose);
+
+            // Logging callback for the active path, this is sent as a list of poses
+            PathPlannerLogging.setLogActivePathCallback(logActivePath);
+        }
     }
 }
