@@ -19,8 +19,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 /**
@@ -33,165 +34,208 @@ import java.util.function.Consumer;
 public class PARTsNT {
     public String name = "Generic";
 
-    NetworkTableInstance nt_Instance = NetworkTableInstance.getDefault();
-    NetworkTable table;
+    private final NetworkTableInstance nt_Instance = NetworkTableInstance.getDefault();
+    private NetworkTable table;
 
-    /**
-     * Generic topic entry that is not designed to be used by itself.
-     *
-     * <p>Use the other chilld classes instead.
-     */
-    private class EasyGenericEntry {
-        /** The NetworkTables topic name. */
-        public String topicName;
+    private final ConcurrentMap<String, EasyEntry> entries = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Sendable> smartDashboardSendables =
+            new ConcurrentHashMap<>();
 
-        public EasyGenericEntry() {}
+    private sealed interface EasyEntry
+            permits EasyBooleanEntry, EasyIntegerEntry, EasyDoubleEntry, EasyStringEntry {
+        String key();
+
+        public boolean blockUpdates = false;
+
+        public void close();
     }
 
-    class EasyBooleanEntry extends EasyGenericEntry {
-        /** The NetworkTables topic name. */
-        public String topicName;
+    public static final class EasyBooleanEntry implements EasyEntry {
+        private final String topicName;
+        private final BooleanTopic topic;
+        private final BooleanEntry entry;
 
-        public BooleanTopic topic;
-        public BooleanEntry entry;
+        private volatile boolean cached;
 
-        /**
-         * The value last gotten from set or get.
-         *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
-         * time.
-         */
-        public boolean cachedValue;
-
-        public EasyBooleanEntry(String name) {
-            topicName = name;
-            topic = table.getBooleanTopic(name);
-            entry = topic.getEntry(false);
+        EasyBooleanEntry(String key, NetworkTable table, boolean initial) {
+            this.topicName = key;
+            this.topic = table.getBooleanTopic(key);
+            this.entry = topic.getEntry(initial);
+            this.cached = initial;
         }
 
-        public EasyBooleanEntry(String name, Boolean value) {
-            topicName = name;
-            topic = table.getBooleanTopic(name);
-            entry = topic.getEntry(false);
-            entry.set(value);
-            cachedValue = value;
-        }
-    }
-
-    class EasyIntegerEntry extends EasyGenericEntry {
-        /** The NetworkTables topic name. */
-        public String topicName;
-
-        public IntegerTopic topic;
-        public IntegerEntry entry;
-
-        /**
-         * The value last gotten from set or get.
-         *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
-         * time.
-         */
-        public int cachedValue;
-
-        public EasyIntegerEntry(String name) {
-            topicName = name;
-            topic = table.getIntegerTopic(name);
-            entry = topic.getEntry(0);
+        @Override
+        public String key() {
+            return topicName;
         }
 
-        public EasyIntegerEntry(String name, int value) {
-            topicName = name;
-            topic = table.getIntegerTopic(name);
-            entry = topic.getEntry(0);
-            entry.set(value);
-            cachedValue = value;
+        private boolean getFromEntry() {
+            return entry.get();
+        }
+
+        public boolean get() {
+            if (blockUpdates) {
+                return cached;
+            }
+            return getFromEntry();
+        }
+
+        public void set(boolean value) {
+            if (blockUpdates) {
+                return;
+            }
+
+            if (cached != value) {
+                entry.set(value);
+                cached = value;
+            }
+        }
+
+        @Override
+        public void close() {
+            entry.close();
         }
     }
 
-    class EasyDoubleEntry extends EasyGenericEntry {
-        /** The NetworkTables topic name. */
-        public String topicName;
+    public static final class EasyIntegerEntry implements EasyEntry {
+        private final String topicName;
+        private final IntegerTopic topic;
+        private final IntegerEntry entry;
 
-        public DoubleTopic topic;
-        public DoubleEntry entry;
+        private volatile int cachedValue;
 
-        /**
-         * The value last gotten from set or get.
-         *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
-         * time.
-         */
-        public double cachedValue;
-
-        public EasyDoubleEntry(String name) {
-            topicName = name;
-            topic = table.getDoubleTopic(name);
-            entry = topic.getEntry(0.0);
+        EasyIntegerEntry(String key, NetworkTable table, int initial) {
+            this.topicName = key;
+            this.topic = table.getIntegerTopic(key);
+            this.entry = topic.getEntry(initial);
+            this.cachedValue = initial;
         }
 
-        public EasyDoubleEntry(String name, double value) {
-            topicName = name;
-            topic = table.getDoubleTopic(name);
-            entry = topic.getEntry(0.0);
-            entry.set(value);
-            cachedValue = value;
-        }
-    }
-
-    class EasyStringEntry extends EasyGenericEntry {
-        /** The NetworkTables topic name. */
-        public String topicName;
-
-        public StringTopic topic;
-        public StringEntry entry;
-
-        /**
-         * The value last gotten from set or get.
-         *
-         * <p>Its purpose here is to provide a way to get the previous cached result, saving some
-         * time.
-         */
-        public String cachedValue;
-
-        public EasyStringEntry(String name) {
-            topicName = name;
-            topic = table.getStringTopic(name);
-            entry = topic.getEntry("");
+        @Override
+        public String key() {
+            return topicName;
         }
 
-        public EasyStringEntry(String name, String value) {
-            topicName = name;
-            topic = table.getStringTopic(name);
-            entry = topic.getEntry("");
-            entry.set(value);
-            cachedValue = value;
+        private int getFromEntry() {
+            return Math.toIntExact(entry.get());
+        }
+
+        public int get() {
+            if (blockUpdates) {
+                return cachedValue;
+            }
+            return getFromEntry();
+        }
+
+        public void set(int value) {
+            if (blockUpdates) {
+                return;
+            }
+
+            if (cachedValue != value) {
+                entry.set(value);
+                cachedValue = value;
+            }
+        }
+
+        @Override
+        public void close() {
+            entry.close();
         }
     }
 
-    List<List> masterList;
-    List<EasyGenericEntry> topicsList;
-    List<EasyBooleanEntry> booleanEntries;
-    List<EasyIntegerEntry> integerEntries;
-    List<EasyDoubleEntry> doubleEntries;
-    List<EasyStringEntry> stringEntries;
+    public static final class EasyDoubleEntry implements EasyEntry {
+        private final String topicName;
+        private final DoubleTopic topic;
+        private final DoubleEntry entry;
 
-    /**
-     * Sets up the master list and the entry lists.
-     *
-     * <p>Internal function.
-     */
-    private void setupEntryLists() {
-        topicsList = new ArrayList<>();
-        masterList = new ArrayList<>();
-        booleanEntries = new ArrayList<>();
-        integerEntries = new ArrayList<>();
-        doubleEntries = new ArrayList<>();
-        stringEntries = new ArrayList<>();
-        masterList.add(topicsList);
-        masterList.add(booleanEntries);
-        masterList.add(integerEntries);
-        masterList.add(doubleEntries);
-        masterList.add(stringEntries);
+        private volatile double cachedValue;
+
+        EasyDoubleEntry(String key, NetworkTable table, double initial) {
+            this.topicName = key;
+            this.topic = table.getDoubleTopic(key);
+            this.entry = topic.getEntry(initial);
+            this.cachedValue = initial;
+        }
+
+        @Override
+        public String key() {
+            return topicName;
+        }
+
+        private double getFromEntry() {
+            return entry.get();
+        }
+
+        public double get() {
+            if (blockUpdates) {
+                return cachedValue;
+            }
+            return getFromEntry();
+        }
+
+        public void set(double value) {
+            if (blockUpdates) {
+                return;
+            }
+
+            if (cachedValue != value) {
+                entry.set(value);
+                cachedValue = value;
+            }
+        }
+
+        @Override
+        public void close() {
+            entry.close();
+        }
+    }
+
+    public static final class EasyStringEntry implements EasyEntry {
+        private final String topicName;
+        private final StringTopic topic;
+        private final StringEntry entry;
+
+        private volatile String cachedValue;
+
+        EasyStringEntry(String key, NetworkTable table, String initial) {
+            this.topicName = key;
+            this.topic = table.getStringTopic(key);
+            this.entry = topic.getEntry(initial);
+            this.cachedValue = initial;
+        }
+
+        @Override
+        public String key() {
+            return topicName;
+        }
+
+        private String getFromEntry() {
+            return entry.get();
+        }
+
+        public String get() {
+            if (blockUpdates) {
+                return cachedValue;
+            }
+            return getFromEntry();
+        }
+
+        public void set(String value) {
+            if (blockUpdates) {
+                return;
+            }
+
+            if (!cachedValue.equals(value)) {
+                entry.set(value);
+                cachedValue = value;
+            }
+        }
+
+        @Override
+        public void close() {
+            entry.close();
+        }
     }
 
     /**
@@ -203,7 +247,6 @@ public class PARTsNT {
      */
     public PARTsNT() {
         table = nt_Instance.getTable("PARTs").getSubTable("Generic");
-        setupEntryLists();
     }
 
     /**
@@ -216,7 +259,6 @@ public class PARTsNT {
     public PARTsNT(Object o) {
         name = o.getClass().getSimpleName();
         table = nt_Instance.getTable("PARTs").getSubTable(name);
-        setupEntryLists();
     }
 
     /**
@@ -231,125 +273,71 @@ public class PARTsNT {
     public PARTsNT(String className) {
         name = (className != "") ? className : "Generic";
         table = nt_Instance.getTable("PARTs").getSubTable(name);
-        setupEntryLists();
     }
 
     // * -------- HELPER FUNCTIONS -------- *//
 
-    /**
-     * Adds an entry to the list if the entry is not already on the list.
-     *
-     * @param entry The entry to be added.
-     */
-    private void addEntryToList(EasyGenericEntry entry) {
-        // Check if the entry already exists in the list.
-        for (int i = 0; i < topicsList.size(); i++) {
-            if (topicsList.get(i).topicName.equals(entry.topicName)) {
-                return; // It exists so we abort adding it to avoid dupes.
-            }
-        }
-        // Add the EasyGenericEntry. (Could also be any child.)
-        topicsList.add(entry);
-    }
-
-    /**
-     * Gets an existing entry from the entry list.
-     *
-     * @param name The name of the entry.
-     * @return The entry if it exists, otherwise null.
-     */
-    private EasyGenericEntry getEntry(String name, boolean pull) {
-        if (pull)
-            for (EasyGenericEntry entry : topicsList) {
-                if (entry.topicName.equals(name)) return entry;
-            }
-        return null;
-    }
-
     // * -------- TYPE SPECIFIC ENTRY CHECKS -------- *//
 
-    /**
-     * Gets an existing entry from the entry list.
-     *
-     * @param name The name of the entry.
-     * @return The entry if it exists, otherwise null.
-     */
-    private EasyBooleanEntry getBooleanEntry(String name, boolean pull) {
-        if (pull)
-            for (EasyBooleanEntry entry : booleanEntries) {
-                if (entry.topicName.equals(name)) return entry;
-            }
-        return null;
+    private EasyBooleanEntry getBooleanEntry(String name) {
+        return entries.get(name) instanceof EasyBooleanEntry entry ? entry : null;
     }
 
-    /**
-     * Gets an existing entry from the entry list.
-     *
-     * @param name The name of the entry.
-     * @return The entry if it exists, otherwise null.
-     */
-    private EasyIntegerEntry getIntegerEntry(String name, boolean pull) {
-        if (pull)
-            for (EasyIntegerEntry entry : integerEntries) {
-                if (entry.topicName.equals(name)) return entry;
-            }
-        return null;
+    private EasyIntegerEntry getIntegerEntry(String name) {
+        return entries.get(name) instanceof EasyIntegerEntry entry ? entry : null;
     }
 
-    /**
-     * Gets an existing entry from the entry list.
-     *
-     * @param name The name of the entry.
-     * @return The entry if it exists, otherwise null.
-     */
-    private EasyDoubleEntry getDoubleEntry(String name, boolean pull) {
-        if (pull)
-            for (EasyDoubleEntry entry : doubleEntries) {
-                if (entry.topicName.equals(name)) return entry;
-            }
-        return null;
+    private EasyDoubleEntry getDoubleEntry(String name) {
+        return entries.get(name) instanceof EasyDoubleEntry entry ? entry : null;
     }
 
-    /**
-     * Gets an existing entry from the entry list.
-     *
-     * @param name The name of the entry.
-     * @return The entry if it exists, otherwise null.
-     */
-    private EasyStringEntry getStringEntry(String name, boolean pull) {
-        if (pull)
-            for (EasyStringEntry entry : stringEntries) {
-                if (entry.topicName.equals(name)) return entry;
-            }
-        return null;
+    private EasyStringEntry getStringEntry(String name) {
+        return entries.get(name) instanceof EasyStringEntry entry ? entry : null;
     }
 
     // * -------- BOOLEAN FUNCTIONS -------- *//
 
     /**
-     * Gets boolean value from the requested entry.
+     * Gets the boolean value from the requested entry.
      *
      * @param name The topic name.
      * @return Returns the boolean value if entry is found, otherwise returns false.
      */
     public boolean getBoolean(String name, boolean pull) {
-        EasyBooleanEntry entry = getBooleanEntry(name, pull);
-        return (entry == null) ? false : (entry.cachedValue = entry.entry.get());
+        EasyBooleanEntry entry = getBooleanEntry(name);
+        return (entry == null) ? false : entry.get();
     }
 
     /**
-     * Sets the boolean value for the requested entry.
+     * Updates the boolean value for the requested entry. The entry is created if it doesn't exist.
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putBoolean(String name, boolean value, boolean post) {
-        EasyBooleanEntry entry = getBooleanEntry(name, post);
-        if (post)
+    public void putBoolean(String name, boolean value) {
+        EasyBooleanEntry entry = getBooleanEntry(name);
+
+        if (entry == null) {
+            entries.put(name, new EasyBooleanEntry(name, table, value));
+        } else {
+            entry.set(value);
+        }
+    }
+
+    /**
+     * Updates the boolean value for the requested entry. The entry is created if it doesn't exist.
+     *
+     * @param name The name of the entry.
+     * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
+     */
+    public void putBoolean(String name, boolean value, boolean submit) {
+        EasyBooleanEntry entry = getBooleanEntry(name);
+        if (submit)
             if (entry == null) {
-                booleanEntries.add(new EasyBooleanEntry(name, value));
-            } else if (entry.cachedValue != value) {
-                entry.entry.set((entry.cachedValue = value));
+                entries.put(name, new EasyBooleanEntry(name, table, value));
+            } else {
+                entry.set(value);
             }
     }
 
@@ -358,27 +346,44 @@ public class PARTsNT {
     /**
      * Gets the integer value from the requested entry.
      *
-     * @param name The name of the entry.
-     * @return Returns the value if entry is found, otherwise returns zero.
+     * @param name The topic name.
+     * @return Returns the integer value if entry is found, otherwise returns zero.
      */
     public int getInteger(String name, boolean pull) {
-        EasyIntegerEntry entry = getIntegerEntry(name, pull);
-        return (entry == null) ? 0 : (entry.cachedValue = Math.toIntExact(entry.entry.get()));
+        EasyIntegerEntry entry = getIntegerEntry(name);
+        return (entry == null) ? 0 : entry.get();
     }
 
     /**
-     * Sets the integer value for the requested entry.
+     * Updates the integer value for the requested entry. The entry is created if it doesn't exist.
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putInteger(String name, int value, boolean post) {
-        EasyIntegerEntry entry = getIntegerEntry(name, post);
-        if (post)
+    public void putInteger(String name, int value) {
+        EasyIntegerEntry entry = getIntegerEntry(name);
+
+        if (entry == null) {
+            entries.put(name, new EasyIntegerEntry(name, table, value));
+        } else {
+            entry.set(value);
+        }
+    }
+
+    /**
+     * Updates the boolean value for the requested entry. The entry is created if it doesn't exist.
+     *
+     * @param name The name of the entry.
+     * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
+     */
+    public void putInteger(String name, int value, boolean submit) {
+        EasyIntegerEntry entry = getIntegerEntry(name);
+        if (submit)
             if (entry == null) {
-                integerEntries.add(new EasyIntegerEntry(name, value));
-            } else if (entry.cachedValue != value) {
-                entry.entry.set((entry.cachedValue = value));
+                entries.put(name, new EasyIntegerEntry(name, table, value));
+            } else {
+                entry.set(value);
             }
     }
 
@@ -387,38 +392,58 @@ public class PARTsNT {
     /**
      * Gets the double value from the requested entry.
      *
-     * @param name The name of the entry.
-     * @return Returns the value if entry is found, otherwise returns zero.
+     * @param name The topic name.
+     * @return Returns the double value if entry is found, otherwise returns zero.
      */
     public double getDouble(String name, boolean pull) {
-        EasyDoubleEntry entry = getDoubleEntry(name, pull);
-        return (entry == null) ? 0 : (entry.cachedValue = entry.entry.get());
+        EasyDoubleEntry entry = getDoubleEntry(name);
+        return (entry == null) ? 0 : entry.get();
     }
 
     /**
-     * Sets the double value for the requested entry.
+     * Updates the double value for the requested entry. The entry is created if it doesn't exist.
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putDouble(String name, double value, boolean post) {
-        EasyDoubleEntry entry = getDoubleEntry(name, post);
-        if (post)
+    public void putDouble(String name, double value) {
+        EasyDoubleEntry entry = getDoubleEntry(name);
+
+        if (entry == null) {
+            entries.put(name, new EasyDoubleEntry(name, table, value));
+        } else {
+            entry.set(value);
+        }
+    }
+
+    /**
+     * Updates the double value for the requested entry. The entry is created if it doesn't exist.
+     *
+     * @param name The name of the entry.
+     * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
+     */
+    public void putDouble(String name, double value, boolean submit) {
+        EasyDoubleEntry entry = getDoubleEntry(name);
+        if (submit)
             if (entry == null) {
-                doubleEntries.add(new EasyDoubleEntry(name, value));
-            } else if (entry.cachedValue != value) {
-                entry.entry.set((entry.cachedValue = value));
+                entries.put(name, new EasyDoubleEntry(name, table, value));
+            } else {
+                entry.set(value);
             }
     }
 
+    // * -------- AMBIGUOUS NUMBER FUNCTIONS -------- *//
+
     /**
      * Sets the double value for the requested entry.
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
      */
-    public void putNumber(String name, double value, boolean post) {
-        putDouble(name, value, post);
+    public void putNumber(String name, double value, boolean submit) {
+        putDouble(name, value, submit);
     }
 
     /**
@@ -426,9 +451,10 @@ public class PARTsNT {
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
      */
-    public void putNumber(String name, int value, boolean post) {
-        putInteger(name, value, post);
+    public void putNumber(String name, int value, boolean submit) {
+        putInteger(name, value, submit);
     }
 
     // * -------- STRING FUNCTIONS -------- *//
@@ -436,27 +462,44 @@ public class PARTsNT {
     /**
      * Gets the string value from the requested entry.
      *
-     * @param name The name of the entry.
-     * @return Returns the value if entry is found, otherwise returns an empty string.
+     * @param name The topic name.
+     * @return Returns the string value if entry is found, otherwise returns an empty string.
      */
     public String getString(String name, boolean pull) {
-        EasyStringEntry entry = getStringEntry(name, pull);
-        return (entry == null) ? "" : (entry.cachedValue = entry.entry.get());
+        EasyStringEntry entry = getStringEntry(name);
+        return (entry == null) ? "" : entry.get();
     }
 
     /**
-     * Sets the string value for the requested entry.
+     * Updates the string value for the requested entry. The entry is created if it doesn't exist.
      *
      * @param name The name of the entry.
      * @param value The new value to publish to the entry.
      */
-    public void putString(String name, String value, boolean post) {
-        EasyStringEntry entry = getStringEntry(name, post);
-        if (post)
+    public void putString(String name, String value) {
+        EasyStringEntry entry = getStringEntry(name);
+
+        if (entry == null) {
+            entries.put(name, new EasyStringEntry(name, table, value));
+        } else {
+            entry.set(value);
+        }
+    }
+
+    /**
+     * Updates the string value for the requested entry. The entry is created if it doesn't exist.
+     *
+     * @param name The name of the entry.
+     * @param value The new value to publish to the entry.
+     * @param submit Whether to actually create or update the entry.
+     */
+    public void putString(String name, String value, boolean submit) {
+        EasyStringEntry entry = getStringEntry(name);
+        if (submit)
             if (entry == null) {
-                stringEntries.add(new EasyStringEntry(name, value));
-            } else if (entry.cachedValue != value) {
-                entry.entry.set((entry.cachedValue = value));
+                entries.put(name, new EasyStringEntry(name, table, value));
+            } else {
+                entry.set(value);
             }
     }
 
@@ -464,12 +507,10 @@ public class PARTsNT {
 
     /** Removes all previously created entries. */
     public void removeAllEntries() {
-        for (int i = 0; i < masterList.size(); i++) {
-            for (int j = 0; j < masterList.get(i).size(); j++) {
-                masterList.get(i).set(j, null);
-                masterList.get(i).remove(j);
-            }
+        for (EasyEntry entry : entries.values()) {
+            entry.close();
         }
+        entries.clear();
     }
 
     /**
@@ -478,25 +519,41 @@ public class PARTsNT {
      * @param name The name of the entry to remove.
      */
     public void removeEntry(String name) {
-        for (int i = 0; i < masterList.size(); i++) {
-            for (int j = 0; j < masterList.get(i).size(); j++) {
-                if (((EasyGenericEntry) masterList.get(i).get(j)).topicName.equals(name)) {
-                    masterList.get(i).set(j, null);
-                    masterList.get(i).remove(j);
-                }
-            }
+        EasyEntry entry = entries.remove(name);
+        if (entry != null) {
+            entry.close();
         }
     }
 
     /**
-     * Adds a sendable to smart dashboard network table entry.
+     * Adds a sendable to smart dashboard network table entry. Extra checks are made to prevent
+     * extra loop overhead because pushing sendables to the dashboard is very expensive.
      *
+     * @param key The name of the sendable entry.
      * @param data The sendable to add.
+     * @param submit Whether to actually publish the sendable. This is important to prevent loop
+     *     overruns. That is also why this is the only method that does not have an overload without
+     *     this parameter.
      */
-    public void putSmartDashboardSendable(String key, Sendable data, boolean post) {
-        String topic = key;
-        if (!name.equals("Generic")) topic = String.format("%s/%s", name, key);
-        if (post) SmartDashboard.putData(topic, data); // loop-overrun
+    public void putSmartDashboardSendable(String key, Sendable data, boolean submit) {
+        if (!submit || data == null) return;
+
+        String topic = name.equals("Generic") ? key : String.format("%s/%s", name, key);
+
+        /**
+         * This is done to prevent multiple registrations of the same sendables which will
+         * absoultely cause loop overruns.
+         */
+        smartDashboardSendables.compute(
+                topic,
+                (k, existing) -> {
+                    if (existing == null) {
+                        SmartDashboard.putData(k, data);
+                        return data;
+                    }
+
+                    return existing;
+                });
     }
 
     /**
@@ -511,6 +568,7 @@ public class PARTsNT {
             Consumer<Pose2d> logTargetPose,
             Consumer<List<Pose2d>> logActivePath,
             boolean logEntry) {
+
         if (logEntry) {
             // Logging callback for target robot pose
             PathPlannerLogging.setLogTargetPoseCallback(logTargetPose);
