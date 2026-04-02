@@ -442,6 +442,7 @@ public class PARTsNT {
         return entries.get(name) instanceof EasyStringEntry entry ? entry : null;
     }
 
+    // #region BOOLEAN FUNCTIONS
     // * -------- BOOLEAN FUNCTIONS -------- *//
 
     /**
@@ -488,7 +489,9 @@ public class PARTsNT {
             }
     }
 
-    // #region
+    // #endregion
+
+    // #region INTEGER FUNCTIONS
     // * -------- INTEGER FUNCTIONS -------- *//
 
     /**
