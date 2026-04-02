@@ -41,15 +41,31 @@ public class PARTsNT {
     private final ConcurrentMap<String, Sendable> smartDashboardSendables =
             new ConcurrentHashMap<>();
 
+    /**
+     * The base entry interface for the easy entries. The interface is sealed to prevent external
+     * implementations and to allow for better type checking when retrieving entries from the map.
+     */
     private sealed interface EasyEntry
             permits EasyBooleanEntry, EasyIntegerEntry, EasyDoubleEntry, EasyStringEntry {
-        String key();
 
+        /**
+         * Gets the topic name of the entry.
+         *
+         * @return The topic name of the entry.
+         */
+        String topicName();
+
+        /** Whether to block updates to the entry. */
         public boolean blockUpdates = false;
 
+        /** Closes the entry and releases the used resources. */
         public void close();
     }
 
+    /**
+     * The easy boolean entry class. This class is used to store the boolean entry and its topic, as
+     * well as a cached value to prevent unnecessary network traffic when the value is not changing.
+     */
     public static final class EasyBooleanEntry implements EasyEntry {
         private final String topicName;
         private final BooleanTopic topic;
@@ -57,22 +73,41 @@ public class PARTsNT {
 
         private volatile boolean cached;
 
-        EasyBooleanEntry(String key, NetworkTable table, boolean initial) {
-            this.topicName = key;
-            this.topic = table.getBooleanTopic(key);
+        /**
+         * Creates a new EasyBooleanEntry with the given topic name, network table, and initial
+         * value.
+         *
+         * @param topicName The name of the topic.
+         * @param table The network table.
+         * @param initial The initial value.
+         */
+        EasyBooleanEntry(String topicName, NetworkTable table, boolean initial) {
+            this.topicName = topicName;
+            this.topic = table.getBooleanTopic(topicName);
             this.entry = topic.getEntry(initial);
             this.cached = initial;
         }
 
         @Override
-        public String key() {
+        public String topicName() {
             return topicName;
         }
 
+        /**
+         * Gets the boolean value from the NT entry.
+         *
+         * @return The boolean value.
+         */
         private boolean getFromEntry() {
             return entry.get();
         }
 
+        /**
+         * Gets the boolean value from the entry. If updates are blocked, returns the cached value
+         * instead.
+         *
+         * @return The boolean value.
+         */
         public boolean get() {
             if (blockUpdates) {
                 return cached;
@@ -80,6 +115,13 @@ public class PARTsNT {
             return getFromEntry();
         }
 
+        /**
+         * Sets the boolean value for the entry. If updates are blocked, its sets nothing and
+         * returns. If the new value is different from the cached value, updates the entry and the
+         * cache.
+         *
+         * @param value The new boolean value.
+         */
         public void set(boolean value) {
             if (blockUpdates) {
                 return;
@@ -97,6 +139,10 @@ public class PARTsNT {
         }
     }
 
+    /**
+     * The easy integer entry class. This class is used to store the integer entry and its topic, as
+     * well as a cached value to prevent unnecessary network traffic when the value is not changing.
+     */
     public static final class EasyIntegerEntry implements EasyEntry {
         private final String topicName;
         private final IntegerTopic topic;
@@ -104,22 +150,41 @@ public class PARTsNT {
 
         private volatile int cachedValue;
 
-        EasyIntegerEntry(String key, NetworkTable table, int initial) {
-            this.topicName = key;
-            this.topic = table.getIntegerTopic(key);
+        /**
+         * Creates a new EasyIntegerEntry with the given topic name, network table, and initial
+         * value.
+         *
+         * @param topicName The name of the topic.
+         * @param table The network table.
+         * @param initial The initial value.
+         */
+        EasyIntegerEntry(String topicName, NetworkTable table, int initial) {
+            this.topicName = topicName;
+            this.topic = table.getIntegerTopic(topicName);
             this.entry = topic.getEntry(initial);
             this.cachedValue = initial;
         }
 
         @Override
-        public String key() {
+        public String topicName() {
             return topicName;
         }
 
+        /**
+         * Gets the integer value from the NT entry.
+         *
+         * @return The integer value.
+         */
         private int getFromEntry() {
             return Math.toIntExact(entry.get());
         }
 
+        /**
+         * Gets the integer value from the entry. If updates are blocked, returns the cached value
+         * instead.
+         *
+         * @return The integer value.
+         */
         public int get() {
             if (blockUpdates) {
                 return cachedValue;
@@ -127,6 +192,13 @@ public class PARTsNT {
             return getFromEntry();
         }
 
+        /**
+         * Sets the integer value for the entry. If updates are blocked, its sets nothing and
+         * returns. If the new value is different from the cached value, updates the entry and the
+         * cache.
+         *
+         * @param value The new integer value.
+         */
         public void set(int value) {
             if (blockUpdates) {
                 return;
@@ -144,6 +216,10 @@ public class PARTsNT {
         }
     }
 
+    /**
+     * The easy double entry class. This class is used to store the double entry and its topic, as
+     * well as a cached value to prevent unnecessary network traffic when the value is not changing.
+     */
     public static final class EasyDoubleEntry implements EasyEntry {
         private final String topicName;
         private final DoubleTopic topic;
@@ -151,22 +227,41 @@ public class PARTsNT {
 
         private volatile double cachedValue;
 
-        EasyDoubleEntry(String key, NetworkTable table, double initial) {
-            this.topicName = key;
-            this.topic = table.getDoubleTopic(key);
+        /**
+         * Creates a new EasyDoubleEntry with the given topic name, network table, and initial
+         * value.
+         *
+         * @param topicName The name of the topic.
+         * @param table The network table.
+         * @param initial The initial value.
+         */
+        EasyDoubleEntry(String topicName, NetworkTable table, double initial) {
+            this.topicName = topicName;
+            this.topic = table.getDoubleTopic(topicName);
             this.entry = topic.getEntry(initial);
             this.cachedValue = initial;
         }
 
         @Override
-        public String key() {
+        public String topicName() {
             return topicName;
         }
 
+        /**
+         * Gets the double value from the NT entry.
+         *
+         * @return The double value.
+         */
         private double getFromEntry() {
             return entry.get();
         }
 
+        /**
+         * Gets the double value from the entry. If updates are blocked, returns the cached value
+         * instead.
+         *
+         * @return The double value.
+         */
         public double get() {
             if (blockUpdates) {
                 return cachedValue;
@@ -174,6 +269,13 @@ public class PARTsNT {
             return getFromEntry();
         }
 
+        /**
+         * Sets the double value for the entry. If updates are blocked, its sets nothing and
+         * returns. If the new value is different from the cached value, updates the entry and the
+         * cache.
+         *
+         * @param value The new double value.
+         */
         public void set(double value) {
             if (blockUpdates) {
                 return;
@@ -191,6 +293,10 @@ public class PARTsNT {
         }
     }
 
+    /**
+     * The easy string entry class. This class is used to store the string entry and its topic, as
+     * well as a cached value to prevent unnecessary network traffic when the value is not changing.
+     */
     public static final class EasyStringEntry implements EasyEntry {
         private final String topicName;
         private final StringTopic topic;
@@ -198,22 +304,41 @@ public class PARTsNT {
 
         private volatile String cachedValue;
 
-        EasyStringEntry(String key, NetworkTable table, String initial) {
-            this.topicName = key;
-            this.topic = table.getStringTopic(key);
+        /**
+         * Creates a new EasyStringEntry with the given topic name, network table, and initial
+         * value.
+         *
+         * @param topicName The name of the topic.
+         * @param table The network table.
+         * @param initial The initial value.
+         */
+        EasyStringEntry(String topicName, NetworkTable table, String initial) {
+            this.topicName = topicName;
+            this.topic = table.getStringTopic(topicName);
             this.entry = topic.getEntry(initial);
             this.cachedValue = initial;
         }
 
         @Override
-        public String key() {
+        public String topicName() {
             return topicName;
         }
 
+        /**
+         * Gets the string value from the NT entry.
+         *
+         * @return The string value.
+         */
         private String getFromEntry() {
             return entry.get();
         }
 
+        /**
+         * Gets the string value from the entry. If updates are blocked, returns the cached value
+         * instead.
+         *
+         * @return The string value.
+         */
         public String get() {
             if (blockUpdates) {
                 return cachedValue;
@@ -221,6 +346,13 @@ public class PARTsNT {
             return getFromEntry();
         }
 
+        /**
+         * Sets the string value for the entry. If updates are blocked, its sets nothing and
+         * returns. If the new value is different from the cached value, updates the entry and the
+         * cache.
+         *
+         * @param value The new string value.
+         */
         public void set(String value) {
             if (blockUpdates) {
                 return;
