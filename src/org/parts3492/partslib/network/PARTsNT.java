@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 public class PARTsNT {
     public String name = "Generic";
 
-    private final NetworkTableInstance nt_Instance = NetworkTableInstance.getDefault();
+    private NetworkTableInstance nt_Instance = NetworkTableInstance.getDefault();
     private NetworkTable table;
 
     private final ConcurrentMap<String, EasyEntry> entries = new ConcurrentHashMap<>();
@@ -275,6 +275,21 @@ public class PARTsNT {
         table = nt_Instance.getTable("PARTs").getSubTable(name);
     }
 
+    /**
+     * Creates a new PARTsNT instance.
+     *
+     * <p>Creating a custom NetworkTableInstance is not recommended and should only be used in
+     * advanced use cases.
+     *
+     * @param className The name of the class.
+     * @param instance The NetworkTableInstance to use. If null, the default instance will be used.
+     */
+    public PARTsNT(String className, NetworkTableInstance instance) {
+        nt_Instance = (instance != null) ? instance : NetworkTableInstance.getDefault();
+        name = (!className.isBlank()) ? className : "Generic";
+        table = nt_Instance.getTable("PARTs").getSubTable(name);
+    }
+
     // * -------- HELPER FUNCTIONS -------- *//
 
     // * -------- TYPE SPECIFIC ENTRY CHECKS -------- *//
@@ -341,6 +356,7 @@ public class PARTsNT {
             }
     }
 
+    // #region
     // * -------- INTEGER FUNCTIONS -------- *//
 
     /**
@@ -387,6 +403,9 @@ public class PARTsNT {
             }
     }
 
+    // #endregion
+
+    // #region DOUBLE FUNCTIONS
     // * -------- DOUBLE FUNCTIONS -------- *//
 
     /**
@@ -433,6 +452,9 @@ public class PARTsNT {
             }
     }
 
+    // #endregion
+
+    // #region AMBIGUOUS NUMBER FUNCTIONS
     // * -------- AMBIGUOUS NUMBER FUNCTIONS -------- *//
 
     /**
@@ -457,6 +479,9 @@ public class PARTsNT {
         putInteger(name, value, submit);
     }
 
+    // #endregion
+
+    // #region STRING FUNCTIONS
     // * -------- STRING FUNCTIONS -------- *//
 
     /**
@@ -503,6 +528,9 @@ public class PARTsNT {
             }
     }
 
+    // #endregion
+
+    // #region REMOVAL FUNCTIONS
     // * -------- REMOVAL FUNCTIONS -------- *//
 
     /** Removes all previously created entries. */
@@ -525,6 +553,9 @@ public class PARTsNT {
         }
     }
 
+    // #endregion
+
+    // #region SENDABLE FUNCTIONS
     /**
      * Adds a sendable to smart dashboard network table entry. Extra checks are made to prevent
      * extra loop overhead because pushing sendables to the dashboard is very expensive.
@@ -577,4 +608,5 @@ public class PARTsNT {
             PathPlannerLogging.setLogActivePathCallback(logActivePath);
         }
     }
+    // #endregion
 }
