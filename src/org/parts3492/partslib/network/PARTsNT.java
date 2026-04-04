@@ -71,7 +71,7 @@ public class PARTsNT {
         private final BooleanTopic topic;
         private final BooleanEntry entry;
 
-        private volatile boolean cached;
+        private volatile boolean cachedValue;
 
         /**
          * Creates a new EasyBooleanEntry with the given topic name, network table, and initial
@@ -85,7 +85,7 @@ public class PARTsNT {
             this.topicName = topicName;
             this.topic = table.getBooleanTopic(topicName);
             this.entry = topic.getEntry(initial);
-            this.cached = initial;
+            this.cachedValue = initial;
         }
 
         @Override
@@ -99,7 +99,9 @@ public class PARTsNT {
          * @return The boolean value.
          */
         private boolean getFromEntry() {
-            return entry.get();
+            boolean val = entry.get();
+            if (val != cachedValue) cachedValue = val;
+            return val;
         }
 
         /**
@@ -110,7 +112,7 @@ public class PARTsNT {
          */
         public boolean get() {
             if (blockUpdates) {
-                return cached;
+                return cachedValue;
             }
             return getFromEntry();
         }
@@ -127,9 +129,9 @@ public class PARTsNT {
                 return;
             }
 
-            if (cached != value) {
+            if (cachedValue != value) {
                 entry.set(value);
-                cached = value;
+                cachedValue = value;
             }
         }
 
@@ -176,7 +178,9 @@ public class PARTsNT {
          * @return The integer value.
          */
         private int getFromEntry() {
-            return Math.toIntExact(entry.get());
+            int val = Math.toIntExact(entry.get());
+            if (val != cachedValue) cachedValue = val;
+            return val;
         }
 
         /**
@@ -253,7 +257,9 @@ public class PARTsNT {
          * @return The double value.
          */
         private double getFromEntry() {
-            return entry.get();
+            double val = entry.get();
+            if (val != cachedValue) cachedValue = val;
+            return val;
         }
 
         /**
@@ -330,7 +336,9 @@ public class PARTsNT {
          * @return The string value.
          */
         private String getFromEntry() {
-            return entry.get();
+            String val = entry.get();
+            if (val != cachedValue) cachedValue = val;
+            return val;
         }
 
         /**
