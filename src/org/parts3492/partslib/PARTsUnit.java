@@ -9,184 +9,184 @@ import java.util.function.Function;
 /** PARTsUnit - A unit container to store and convert values. */
 public class PARTsUnit {
 
-    public enum PARTsUnitType {
-        /** Degrees. */
-        Angle, // TODO: change to degree?
-        Radian,
-        Meter,
-        Inch,
-        Foot,
-        Percent,
-        Rotations,
-        MetersPerSecond,
-        RadiansPerSecond,
-        Pound,
-        Kilogram
-    }
+  public enum PARTsUnitType {
+    /** Degrees. */
+    Angle, // TODO: change to degree?
+    Radian,
+    Meter,
+    Inch,
+    Foot,
+    Percent,
+    Rotations,
+    MetersPerSecond,
+    RadiansPerSecond,
+    Pound,
+    Kilogram
+  }
 
-    private double value;
-    private PARTsUnitType unitType;
+  private double value;
+  private PARTsUnitType unitType;
 
-    /**
-     * Create a new PARTsUnit.
-     *
-     * @param value The initial value of the unit.
-     * @param unitType The type that the initial value is currently in.
-     */
-    public PARTsUnit(double value, PARTsUnitType unitType) {
-        this.value = value;
-        this.unitType = unitType;
-    }
+  /**
+   * Create a new PARTsUnit.
+   *
+   * @param value The initial value of the unit.
+   * @param unitType The type that the initial value is currently in.
+   */
+  public PARTsUnit(double value, PARTsUnitType unitType) {
+    this.value = value;
+    this.unitType = unitType;
+  }
 
-    /**
-     * Gets the raw value as a double.
-     *
-     * @return The value as a double.
-     */
-    public double getValue() {
-        return value;
-    }
+  /**
+   * Gets the raw value as a double.
+   *
+   * @return The value as a double.
+   */
+  public double getValue() {
+    return value;
+  }
 
-    /**
-     * Gets the absolute value as a double.
-     *
-     * @return The value as a double.
-     */
-    public double getMagnitude() {
-        return Math.abs(value);
-    }
+  /**
+   * Gets the absolute value as a double.
+   *
+   * @return The value as a double.
+   */
+  public double getMagnitude() {
+    return Math.abs(value);
+  }
 
-    /**
-     * Get the current unit type for an instance of {@link org.parts3492.partslib.PARTsUnit
-     * PARTsUnit}.
-     *
-     * @return The unit type as a {@link org.parts3492.partslib.PARTsUnit.PARTsUnitType
-     *     PARTsUnitType}.
-     */
-    public PARTsUnitType getUnitType() {
-        return unitType;
-    }
+  /**
+   * Get the current unit type for an instance of {@link org.parts3492.partslib.PARTsUnit
+   * PARTsUnit}.
+   *
+   * @return The unit type as a {@link org.parts3492.partslib.PARTsUnit.PARTsUnitType
+   *     PARTsUnitType}.
+   */
+  public PARTsUnitType getUnitType() {
+    return unitType;
+  }
 
-    /**
-     * Converts current unit into the requested unit.
-     *
-     * @param unitType The target unit.
-     * @return Converted unit in double.
-     */
-    public PARTsUnit toPARTsUnit(PARTsUnitType unitType) {
-        return new PARTsUnit(to(unitType), unitType);
-    }
+  /**
+   * Converts current unit into the requested unit.
+   *
+   * @param unitType The target unit.
+   * @return Converted unit in double.
+   */
+  public PARTsUnit toPARTsUnit(PARTsUnitType unitType) {
+    return new PARTsUnit(to(unitType), unitType);
+  }
 
-    /**
-     * Converts current unit into the requested unit.
-     *
-     * @param unitType The target unit.
-     * @return Converted unit in double.
-     */
-    public double to(PARTsUnitType unitType) {
-        String message = "No to type for unit.";
-        switch (this.unitType) {
-            case Angle:
-                switch (unitType) {
-                    case Radian:
-                        return this.value * Math.PI / 180.0;
-                    case Angle:
-                        return this.value;
-                    case Rotations:
-                        return this.value / 360.0;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Radian:
-                if (unitType == PARTsUnitType.Angle) return this.value * 180.0 / Math.PI;
-                else if (unitType == this.unitType) return this.value;
-                throw new RuntimeException(message);
-            case Meter:
-                switch (unitType) {
-                    case Inch:
-                        return this.value * 39.3700787;
-                    case Foot:
-                        return this.value * 3.2808399;
-                    case Meter:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Inch:
-                switch (unitType) {
-                    case Meter:
-                        return this.value / 39.3700787;
-                    case Foot:
-                        return this.value / 12;
-                    case Inch:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Foot:
-                switch (unitType) {
-                    case Meter:
-                        return this.value / 3.2808399;
-                    case Inch:
-                        return this.value * 12;
-                    case Foot:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Rotations:
-                switch (unitType) {
-                    case Angle:
-                        return this.value * 360;
-                    case Rotations:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Percent:
-                switch (unitType) {
-                    case Percent:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(
-                                message + " Percent cannot not be translated to any other type.");
-                }
-            case Pound:
-                switch (unitType) {
-                    case Kilogram:
-                        return this.value * 0.453592;
-                    case Pound:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            case Kilogram:
-                switch (unitType) {
-                    case Pound:
-                        return this.value * 2.2046226218;
-                    case Kilogram:
-                        return this.value;
-                    default:
-                        throw new RuntimeException(message);
-                }
-            default:
-                throw new RuntimeException(message);
+  /**
+   * Converts current unit into the requested unit.
+   *
+   * @param unitType The target unit.
+   * @return Converted unit in double.
+   */
+  public double to(PARTsUnitType unitType) {
+    String message = "No to type for unit.";
+    switch (this.unitType) {
+      case Angle:
+        switch (unitType) {
+          case Radian:
+            return this.value * Math.PI / 180.0;
+          case Angle:
+            return this.value;
+          case Rotations:
+            return this.value / 360.0;
+          default:
+            throw new RuntimeException(message);
         }
+      case Radian:
+        if (unitType == PARTsUnitType.Angle) return this.value * 180.0 / Math.PI;
+        else if (unitType == this.unitType) return this.value;
+        throw new RuntimeException(message);
+      case Meter:
+        switch (unitType) {
+          case Inch:
+            return this.value * 39.3700787;
+          case Foot:
+            return this.value * 3.2808399;
+          case Meter:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      case Inch:
+        switch (unitType) {
+          case Meter:
+            return this.value / 39.3700787;
+          case Foot:
+            return this.value / 12;
+          case Inch:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      case Foot:
+        switch (unitType) {
+          case Meter:
+            return this.value / 3.2808399;
+          case Inch:
+            return this.value * 12;
+          case Foot:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      case Rotations:
+        switch (unitType) {
+          case Angle:
+            return this.value * 360;
+          case Rotations:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      case Percent:
+        switch (unitType) {
+          case Percent:
+            return this.value;
+          default:
+            throw new RuntimeException(
+                message + " Percent cannot not be translated to any other type.");
+        }
+      case Pound:
+        switch (unitType) {
+          case Kilogram:
+            return this.value * 0.453592;
+          case Pound:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      case Kilogram:
+        switch (unitType) {
+          case Pound:
+            return this.value * 2.2046226218;
+          case Kilogram:
+            return this.value;
+          default:
+            throw new RuntimeException(message);
+        }
+      default:
+        throw new RuntimeException(message);
     }
+  }
 
-    /**
-     * Converts current unit into the requested unit.
-     *
-     * @param unitType The target {@link org.parts3492.partslib.PARTsUnit.PARTsUnitType
-     *     PARTsUnitType}.
-     * @return The converted {@link org.parts3492.partslib.PARTsUnit PARTsUnit}.
-     */
-    public PARTsUnit as(PARTsUnitType unitType) {
-        return new PARTsUnit(to(unitType), unitType);
-    }
+  /**
+   * Converts current unit into the requested unit.
+   *
+   * @param unitType The target {@link org.parts3492.partslib.PARTsUnit.PARTsUnitType
+   *     PARTsUnitType}.
+   * @return The converted {@link org.parts3492.partslib.PARTsUnit PARTsUnit}.
+   */
+  public PARTsUnit as(PARTsUnitType unitType) {
+    return new PARTsUnit(to(unitType), unitType);
+  }
 
-    // * DIRECT STATIC CONVERSIONS */
-    public static Function<Double, Double> InchesToMeters = inches -> inches / 39.37;
-    public static Function<Double, Double> MetersToInches = meters -> meters * 39.37;
-    public static Function<Double, Double> DegreesToRadians = degrees -> degrees * (Math.PI / 180);
+  // * DIRECT STATIC CONVERSIONS */
+  public static Function<Double, Double> InchesToMeters = inches -> inches / 39.37;
+  public static Function<Double, Double> MetersToInches = meters -> meters * 39.37;
+  public static Function<Double, Double> DegreesToRadians = degrees -> degrees * (Math.PI / 180);
 }

@@ -4,44 +4,41 @@
 
 package org.parts3492.partslib.network;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.ArrayList;
 import org.parts3492.partslib.command.IPARTsSubsystem;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import java.util.ArrayList;
-
 public class PARTsDashboard {
-    private static DashboardTab state = DashboardTab.AUTONOMOUS;
-    private static final PARTsNT partsNT = new PARTsNT();
+  private static DashboardTab state = DashboardTab.AUTONOMOUS;
+  private static final PARTsNT partsNT = new PARTsNT();
 
-    public enum DashboardTab {
-        AUTONOMOUS("Autonomous"),
-        TELEOPERATED("Teleoperated"),
-        DEBUG("Dashboard");
+  public enum DashboardTab {
+    AUTONOMOUS("Autonomous"),
+    TELEOPERATED("Teleoperated"),
+    DEBUG("Dashboard");
 
-        String tabName;
+    String tabName;
 
-        DashboardTab(String s) {
-            this.tabName = s;
-        }
+    DashboardTab(String s) {
+      this.tabName = s;
     }
+  }
 
-    public PARTsDashboard() {}
+  public PARTsDashboard() {}
 
-    public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems, boolean post) {
-        subsystems.forEach(
-                s ->
-                        partsNT.putSmartDashboardSendable(
-                                s.getName().replace("Phys", "").replace("Sim", ""), s, post));
-    }
+  public static void setSubsystems(ArrayList<IPARTsSubsystem> subsystems, boolean post) {
+    subsystems.forEach(
+        s ->
+            partsNT.putSmartDashboardSendable(
+                s.getName().replace("Phys", "").replace("Sim", ""), s, post));
+  }
 
-    public static void setCommandScheduler(boolean post) {
-        partsNT.putSmartDashboardSendable(
-                "Command Scheduler", CommandScheduler.getInstance(), post);
-    }
+  public static void setCommandScheduler(boolean post) {
+    partsNT.putSmartDashboardSendable("Command Scheduler", CommandScheduler.getInstance(), post);
+  }
 
-    public static void setTab(DashboardTab dashboardState) {
-        state = dashboardState;
-        Elastic.selectTab(state.tabName);
-    }
+  public static void setTab(DashboardTab dashboardState) {
+    state = dashboardState;
+    Elastic.selectTab(state.tabName);
+  }
 }

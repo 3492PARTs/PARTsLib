@@ -1,35 +1,35 @@
 buildscript {
-   ext.WPI_VER = "2026.2.1"
+    ext.WPI_VER = "2026.2.1"
 }
 
 plugins {
-   id "java"
+    id "java"
 
-   id "maven-publish"
+    id "maven-publish"
 
-   id "edu.wpi.first.GradleRIO" version "2026.2.1"
-   id "com.diffplug.spotless" version "6.22.0"
-   id "com.github.spotbugs" version "5.2.0"
+    id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id "com.diffplug.spotless" version "6.22.0"
+    id "com.github.spotbugs" version "5.2.0"
 }
 
 group = (findProperty('group') ?: 'com.github.3492PARTs')
 version = (findProperty('version') ?: '0.0.0-SNAPSHOT')
 
 java {
-   sourceCompatibility = JavaVersion.VERSION_17
-   targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 sourceSets {
-   main {
-      java {
-         srcDir "src"
-      }
-   }
+    main {
+        java {
+            srcDir "src"
+        }
+    }
 }
 
 configurations {
-   jaxDoclet
+    jaxDoclet
 }
 
 repositories {
@@ -38,51 +38,51 @@ repositories {
     }
 }
 
-dependencies { 
-   annotationProcessor wpi.java.deps.wpilibAnnotations()
-   implementation wpi.java.deps.wpilib()
-   implementation wpi.java.vendor.java()
+dependencies {
+    annotationProcessor wpi.java.deps.wpilibAnnotations()
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
 
-   testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 publishing {
-   publications {
-      maven(MavenPublication) {
-         // See if forcing the groupId here keeps it from malforming the POM.
-         groupId = (findProperty('group') ?: 'com.github.3492PARTs')
-         version = (findProperty('version') ?: '0.0.0-SNAPSHOT')
-         description = "PARTs Utility Library"
-         artifactId = 'PARTsLib'
+    publications {
+        maven(MavenPublication) {
+            // See if forcing the groupId here keeps it from malforming the POM.
+            groupId = (findProperty('group') ?: 'com.github.3492PARTs')
+            version = (findProperty('version') ?: '0.0.0-SNAPSHOT')
+            description = "PARTs Utility Library"
+            artifactId = 'PARTsLib'
 
-         from components.java
-      }
-   }
+            from components.java
+        }
+    }
 }
 
 final YEAR = new Date().format('yyyy')
 
 spotless {
-   java {
-      licenseHeader """
+    java {
+        licenseHeader """
 /* Copyright (c) ${YEAR} PARTs 3492. All rights reserved. */
 /* This work is licensed under the terms of the license */
 /* found in the root directory of this project. */
 
 """
 
-      // Exclude Elastic due to their custom license header. :D
-      targetExclude("src/org/parts3492/partslib/network/Elastic.java")
+        // Exclude Elastic due to their custom license header. :D
+        targetExclude("src/org/parts3492/partslib/network/Elastic.java")
 
-      googleJavaFormat('1.17.0').aosp()
+        googleJavaFormat('1.17.0').aosp()
 
-      trimTrailingWhitespace()
-      endWithNewline()
+        trimTrailingWhitespace()
+        endWithNewline()
 
-      importOrder('org.parts3492.partslib', 'org.parts3492', 'edu.wpi')
-      removeUnusedImports()
-   }
-   enforceCheck = false
+        importOrder('org.parts3492.partslib', 'org.parts3492', 'edu.wpi')
+        removeUnusedImports()
+    }
+    enforceCheck = false
 }
 
 // Example to configure HTML report
@@ -97,20 +97,20 @@ spotbugsMain {
 }
 
 spotbugs {
-   ignoreFailures = true
-   effort = 'max'
+    ignoreFailures = true
+    effort = 'max'
 }
 
 javadoc {
-  destinationDir = file('docs/')
+    destinationDir = file('docs/')
 }
 
 build {
-   //dependsOn javadoc
+    //dependsOn javadoc
 }
 
 jar {
-   from sourceSets.main.allSource
+    from sourceSets.main.allSource
 }
 
 wpi.java.configureExecutableTasks(jar)
