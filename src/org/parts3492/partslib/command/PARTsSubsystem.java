@@ -10,14 +10,13 @@ package org.parts3492.partslib.command;
 // the WPILib BSD license file in the root directory of this project.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.parts3492.partslib.PARTsLogger;
 import org.parts3492.partslib.PARTsPreferences;
 import org.parts3492.partslib.network.PARTsNT;
 
 /** Command based subsystem with built-in PARTs tools and features. */
 public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubsystem {
   protected PARTsNT partsNT;
-  protected PARTsLogger partsLogger;
+  // protected PARTsLogger partsLogger;
   protected PARTsPreferences partsPrefrences;
 
   /**
@@ -27,7 +26,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem() {
     partsNT = new PARTsNT(this.getName());
-    partsLogger = new PARTsLogger(this.getName());
+    // partsLogger = new PARTsLogger(this.getName());
     partsPrefrences = new PARTsPreferences();
   }
 
@@ -41,7 +40,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem(boolean enableLogging) {
     partsNT = new PARTsNT(this.getName());
-    partsLogger = new PARTsLogger(this.getName(), enableLogging);
+    // partsLogger = new PARTsLogger(this.getName(), enableLogging);
     partsPrefrences = new PARTsPreferences();
   }
 
@@ -54,7 +53,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem(Object o) {
     partsNT = new PARTsNT(o);
-    partsLogger = new PARTsLogger(o);
+    // partsLogger = new PARTsLogger(o);
     partsPrefrences = new PARTsPreferences();
   }
 
@@ -69,7 +68,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem(Object o, boolean enableLogging) {
     partsNT = new PARTsNT(o);
-    partsLogger = new PARTsLogger(o, enableLogging);
+    // partsLogger = new PARTsLogger(o, enableLogging);
     partsPrefrences = new PARTsPreferences();
   }
 
@@ -82,7 +81,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem(String className) {
     partsNT = new PARTsNT(className);
-    partsLogger = new PARTsLogger(className);
+    // partsLogger = new PARTsLogger(className);
     partsPrefrences = new PARTsPreferences();
   }
 
@@ -97,7 +96,7 @@ public abstract class PARTsSubsystem extends SubsystemBase implements IPARTsSubs
    */
   public PARTsSubsystem(String className, boolean enableLogging) {
     partsNT = new PARTsNT(className);
-    partsLogger = new PARTsLogger(className);
+    // partsLogger = new PARTsLogger(className);
     partsPrefrences = new PARTsPreferences();
   }
 }

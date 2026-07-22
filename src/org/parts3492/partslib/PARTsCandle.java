@@ -28,7 +28,6 @@ import com.ctre.phoenix6.signals.VBatOutputModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.HashSet;
-import java.util.Set;
 import org.parts3492.partslib.command.PARTsCommandUtils;
 import org.parts3492.partslib.command.PARTsSubsystem;
 
@@ -37,7 +36,7 @@ public abstract class PARTsCandle<T> extends PARTsSubsystem {
   private static CANdle candle;
   CANdleConfiguration config = new CANdleConfiguration();
   private T candleState;
-  private Set<T> candleStates = new HashSet<>();
+  private HashSet<T> candleStates = new HashSet<T>();
 
   public enum Color {
 
@@ -391,7 +390,7 @@ public abstract class PARTsCandle<T> extends PARTsSubsystem {
   }
 
   public void removeAllStates() {
-    candleStates = new HashSet<>();
+    candleStates = new HashSet<T>();
   }
 
   /* Wrappers so we can access the CANdle from the subsystem */
@@ -439,7 +438,7 @@ public abstract class PARTsCandle<T> extends PARTsSubsystem {
     candleState = state;
   }
 
-  protected Set<T> getAllStates() {
+  protected HashSet<T> getAllStates() {
     return candleStates;
   }
 
