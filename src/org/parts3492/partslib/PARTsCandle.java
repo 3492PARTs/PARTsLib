@@ -390,6 +390,10 @@ public abstract class PARTsCandle<T> extends PARTsSubsystem {
         Commands.runOnce(() -> removeState(state)).ignoringDisable(true));
   }
 
+  public void removeAllStates() {
+    candleStates = new HashSet<>();
+  }
+
   /* Wrappers so we can access the CANdle from the subsystem */
   public double getVbat() {
     return candle.getVBatModulation(true).getValueAsDouble();
@@ -433,10 +437,6 @@ public abstract class PARTsCandle<T> extends PARTsSubsystem {
 
   protected void setState(T state) {
     candleState = state;
-  }
-
-  protected void removeAllStates() {
-    candleStates = new HashSet<>();
   }
 
   protected Set<T> getAllStates() {
