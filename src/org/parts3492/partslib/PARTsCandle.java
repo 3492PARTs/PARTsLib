@@ -26,13 +26,18 @@ import com.ctre.phoenix6.signals.StatusLedWhenActiveValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
 import com.ctre.phoenix6.signals.VBatOutputModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import java.util.HashSet;
+import java.util.Set;
 import org.parts3492.partslib.command.PARTsCommandUtils;
 import org.parts3492.partslib.command.PARTsSubsystem;
 
-public abstract class PARTsCandle extends PARTsSubsystem {
+public abstract class PARTsCandle<T> extends PARTsSubsystem {
   // https://github.com/CrossTheRoadElec/Phoenix5-Examples/blob/master/Java%20General/CANdle%20MultiAnimation/src/main/java/frc/robot/subsystems/CANdleSystem.java
   private static CANdle candle;
   CANdleConfiguration config = new CANdleConfiguration();
+  private T candleState;
+  private Set<T> candleStates = new HashSet<>();
 
   public enum Color {
 
@@ -358,6 +363,32 @@ public abstract class PARTsCandle extends PARTsSubsystem {
   }
 
   /*---------------------------------- Custom Public Functions ----------------------------------*/
+  public void addState(T state) {
+    candleStates.add(state);
+
+    computeState();
+  }
+
+  public void removeState(T state) {
+    candleStates.remove(state);
+
+    computeState();
+  }
+
+  public T getState() {
+    return candleState;
+  }
+
+  public Command commandAddState(T state) {
+    return PARTsCommandUtils.setCommandName(
+        "Candle.commandAddState", Commands.runOnce(() -> addState(state)).ignoringDisable(true));
+  }
+
+  public Command commandRemoveState(T state) {
+    return PARTsCommandUtils.setCommandName(
+        "Candle.commandRemoveState",
+        Commands.runOnce(() -> removeState(state)).ignoringDisable(true));
+  }
 
   /* Wrappers so we can access the CANdle from the subsystem */
   public double getVbat() {
@@ -396,6 +427,22 @@ public abstract class PARTsCandle extends PARTsSubsystem {
     applyConfig();
   }
 
+  /*-------------------------------- Custom Protected Functions --------------------------------*/
+
+  protected abstract void computeState();
+
+  protected void setState(T state) {
+    candleState = state;
+  }
+
+  protected void removeAllStates() {
+    candleStates = new HashSet<>();
+  }
+
+  protected Set<T> getAllStates() {
+    return candleStates;
+  }
+
   /*-------------------------------- Generic Subsystem Functions --------------------------------*/
 
   @Override
@@ -404,7 +451,9 @@ public abstract class PARTsCandle extends PARTsSubsystem {
   }
 
   @Override
-  public void outputTelemetry() {}
+  public void outputTelemetry() {
+    super.partsNT.putString("State", candleState.toString(), true);
+  }
 
   @Override
   public void stop() {}
