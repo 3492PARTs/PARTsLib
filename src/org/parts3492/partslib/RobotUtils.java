@@ -37,7 +37,7 @@ public class RobotUtils {
   }
 
   /** Get the alliance the robot is currently on. */
-  public void getAlliance() {
+  public static void getAlliance() {
     if (DriverStation.getAlliance().isPresent()) {
       alliance = DriverStation.getAlliance().get();
     }
